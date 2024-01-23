@@ -1,0 +1,5 @@
+selenium
+webdriver-manager
+requests
+fake_useragent
+free_proxy
