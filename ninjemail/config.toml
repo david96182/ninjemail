@@ -1,0 +1,5 @@
+# config.toml
+CAPTCHA_SERVICES_SUPPORTED = ["deathbycaptcha"]
+DEFAULT_CAPTCHA_SERVICE = "deathbycaptcha"
+SMS_SERVICES_SUPPORTED = ["getsmscode"]
+DEFAULT_SMS_SERVICE = "getsmscode"
