@@ -4,3 +4,4 @@ requests
 fake_useragent
 free_proxy
 toml
+deathbycaptcha-official
