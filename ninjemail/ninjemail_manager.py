@@ -8,7 +8,7 @@ from config import (
 )
 from email_providers import outlook
 from utils.webdriver_utils import create_driver
-from utils import get_birthdate
+from utils import get_birthdate, generate_missing_info
 
 
 class Ninjemail():
@@ -76,23 +76,23 @@ class Ninjemail():
         )
 
     def create_outlook_account(self, 
-                               username, 
-                               password, 
-                               first_name, 
-                               last_name,
-                               country,
-                               birthdate,
+                               username="", 
+                               password="", 
+                               first_name="", 
+                               last_name="",
+                               country="",
+                               birthdate="",
                                hotmail=False):
         """
         Creates an Outlook/Hotmail account using the provided information.
 
         Args:
-            username (str): The desired username for the Outlook account.
-            password (str): The desired password for the Outlook account.
-            first_name (str): The first name of the account holder.
-            last_name (str): The last name of the account holder.
-            country (str): The country of residence for the account holder.
-            birthdate (str): The birthdate of the account holder in the format "MM/DD/YYYY".
+            username (str, optional): The desired username for the Outlook account.
+            password (str, optional): The desired password for the Outlook account.
+            first_name (str, optional): The first name of the account holder.
+            last_name (str, optional): The last name of the account holder.
+            country (str, optional): The country of residence for the account holder.
+            birthdate (str, optional): The birthdate of the account holder in the format "MM-DD-YYYY".
             hotmail (bool, optional): Flag indicating whether to create a Hotmail account. Default is False.
 
         Returns:
@@ -100,6 +100,8 @@ class Ninjemail():
 
         """
         driver = create_driver(self.browser)
+        username, password, first_name, last_name, \
+            country, birthdate = generate_missing_info(username, password, first_name, last_name, country, birthdate)
         month, day, year = get_birthdate(birthdate)
 
         return outlook.create_account(self.captcha_key,
@@ -114,14 +116,3 @@ class Ninjemail():
                                       year,
                                       hotmail)
 
-
-if __name__ == "__main__":
-    ninja = Ninjemail(captcha_key='davidpuerta:7nrmU3e9acFx6pn')
-    ninja.create_outlook_account('asd5349072804', 
-                                 'qwer123A$fsdf.G', 
-                                 'Cuba', 
-                                 'Mylastname',
-                                 'United States',
-                                 '09-21-1999',
-                                 True
-                                 )
