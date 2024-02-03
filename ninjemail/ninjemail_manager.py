@@ -13,13 +13,38 @@ from utils import get_birthdate
 
 class Ninjemail():
     """
-    Main class to create email accounts
+    Main class to create email accounts.
+
+    Attributes:
+        browser (str): The browser to be used for automation. Default is "firefox".
+        captcha_key (str): The API key for the captcha solving service. Default is an empty string.
+        sms_key (str): The API key for the SMS service. Default is an empty string.
+        captcha_services_supported (list): The list of supported captcha solving services.
+        default_captcha_service (str): The default captcha solving service.
+        sms_services_supported (list): The list of supported SMS services.
+        default_sms_service (str): The default SMS service.
+
+    Methods:
+        __init__(self, browser="firefox", captcha_key="", sms_key=""): Initializes a Ninjemail instance.
+        setup_logging(self): Sets up the logging configuration for Ninjemail.
+
+    Logging:
+        Logs are saved in the 'logs/ninjemail.log' file with a format of '[timestamp] [log_level]: log_message'.
+
     """
     def __init__(self,
                  browser="firefox",
                  captcha_key="",
                  sms_key="" 
                  ):     
+        """
+        Initializes a Ninjemail instance.
+
+        Args:
+            browser (str, optional): The browser to be used for automation. Default is "firefox".
+            captcha_key (str, optional): The API key for the captcha solving service. Default is an empty string.
+            sms_key (str, optional): The API key for the SMS service. Default is an empty string.
+        """
         self.browser = browser
         self.captcha_key = captcha_key
         self.sms_key = sms_key
@@ -33,6 +58,11 @@ class Ninjemail():
         self.setup_logging()
 
     def setup_logging(self):
+        """
+        Sets up the logging configuration for Ninjemail.
+
+        Logs are saved in the 'logs/ninjemail.log' file with a format of '[timestamp] [log_level]: log_message'.
+        """
         # Create logs directory if it doesn't exist
         logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
         os.makedirs(logs_dir, exist_ok=True)
@@ -84,3 +114,14 @@ class Ninjemail():
                                       year,
                                       hotmail)
 
+
+if __name__ == "__main__":
+    ninja = Ninjemail(captcha_key='davidpuerta:7nrmU3e9acFx6pn')
+    ninja.create_outlook_account('asd5349072804', 
+                                 'qwer123A$fsdf.G', 
+                                 'Cuba', 
+                                 'Mylastname',
+                                 'United States',
+                                 '09-21-1999',
+                                 True
+                                 )
