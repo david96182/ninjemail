@@ -1,12 +1,14 @@
 import logging
+import os
+import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
-from captcha_solvers import deathbycaptchasolver
+from selenium import webdriver
 
 URL = 'https://signup.live.com/signup'
-WAIT = 15
+WAIT = 25
 
 def create_account(captcha_key,
                    driver, 
@@ -40,6 +42,20 @@ def create_account(captcha_key,
 
     """
     logging.info('Creating outlook account')
+
+    driver.install_addon(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.xpi'))
+    driver.maximize_window()
+    driver.get('https://www.google.com')
+    capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
+    capsolver_src = capsolver_src.get_attribute('src')
+    capsolver_ext_id = capsolver_src.split('/')[2]
+    driver.get(f'moz-extension://{capsolver_ext_id}/www/index.html#/popup')
+    time.sleep(5)
+    
+    api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
+    api_key_input.send_keys(captcha_key)
+    driver.find_element(By.ID, 'q-app').click()
+    time.sleep(5)
 
     driver.set_window_size(800, 600)
     driver.get(URL)
@@ -91,20 +107,31 @@ def create_account(captcha_key,
 
     driver.implicitly_wait(2)
 
-    # Get sitekey and solve captcha
-    iframe = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'enforcementFrame')))
-    iframe_src_parts = iframe.get_attribute('src').split('/')
-    site_key = iframe_src_parts[3]
-    captcha_url = driver.current_url
-    
-    captcha_token = deathbycaptchasolver.solve_funcaptcha(captcha_key, captcha_url, site_key)
-    if not captcha_token:
-        logging.error("Captcha was not solved. Finishing..")
-        driver.quit()
-        return
-    driver.execute_script(
-            'parent.postMessage(JSON.stringify({eventId:"challenge-complete",payload:{sessionToken:"' + captcha_token + '"}}),"*")')
+    # captcha next button
+    WebDriverWait(driver, WAIT).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "enforcementFrame")))
+    WebDriverWait(driver, WAIT).until(EC.frame_to_be_available_and_switch_to_it((By.TAG_NAME, "iframe")))
+    WebDriverWait(driver, WAIT).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "game-core-frame")))
+    next_button = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div#root > div > div > button")))
+    next_button.click()
 
-    driver.quit()
+    wait = WebDriverWait(driver, 60) # wait for capsolver extension to solve the captcha
+    while True:
+        try:
+            h2_element = wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'Something went wrong. Please reload the challenge to try again.')]")))
+
+            if h2_element:
+                button = driver.find_element(By.XPATH, "//button[contains(text(), 'Reload Challenge')]")
+                button.click()
+        except:
+            break 
+
+    time.sleep(5)
+    try:
+        continue_button = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[contains(text(), 'Click Button')]")))
+        continue_button.click()
+    except:
+        pass
+
+    #driver.quit()
 
 

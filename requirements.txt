@@ -6,3 +6,4 @@ free_proxy
 toml
 deathbycaptcha-official
 Faker
+capsolver
