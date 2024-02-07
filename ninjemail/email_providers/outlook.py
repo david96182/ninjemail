@@ -43,19 +43,21 @@ def create_account(captcha_key,
     """
     logging.info('Creating outlook account')
 
-    driver.install_addon(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.xpi'))
-    driver.maximize_window()
-    driver.get('https://www.google.com')
-    capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
-    capsolver_src = capsolver_src.get_attribute('src')
-    capsolver_ext_id = capsolver_src.split('/')[2]
-    driver.get(f'moz-extension://{capsolver_ext_id}/www/index.html#/popup')
-    time.sleep(5)
-    
-    api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
-    api_key_input.send_keys(captcha_key)
-    driver.find_element(By.ID, 'q-app').click()
-    time.sleep(5)
+    if type(driver) is webdriver.Firefox:
+        driver.install_addon(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.xpi'))
+        driver.get('https://www.google.com')
+        capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
+        capsolver_src = capsolver_src.get_attribute('src')
+        capsolver_ext_id = capsolver_src.split('/')[2]
+        driver.get(f'moz-extension://{capsolver_ext_id}/www/index.html#/popup')
+        time.sleep(5)
+        
+        api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
+        api_key_input.send_keys(captcha_key)
+        driver.find_element(By.ID, 'q-app').click()
+        time.sleep(5)
+    else:
+        print("The WebDriver is not an instance of Firefox.")
 
     driver.set_window_size(800, 600)
     driver.get(URL)
