@@ -1,5 +1,9 @@
 # config.toml
-CAPTCHA_SERVICES_SUPPORTED = ["deathbycaptcha"]
+CAPTCHA_SERVICES_SUPPORTED = ["deathbycaptcha", "capsolver"]
 DEFAULT_CAPTCHA_SERVICE = "deathbycaptcha"
 SMS_SERVICES_SUPPORTED = ["getsmscode"]
 DEFAULT_SMS_SERVICE = "getsmscode"
+
+[[SUPPORTED_SOLVERS_BY_EMAIL]]
+email_service = "outlook"
+solvers = ["capsolver"]

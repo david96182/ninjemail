@@ -5,6 +5,7 @@ from config import (
     DEFAULT_CAPTCHA_SERVICE,
     SMS_SERVICES_SUPPORTED,
     DEFAULT_SMS_SERVICE,
+    SUPPORTED_SOLVERS_BY_EMAIL
 )
 from email_providers import outlook
 from utils.webdriver_utils import create_driver
@@ -34,7 +35,7 @@ class Ninjemail():
     """
     def __init__(self,
                  browser="firefox",
-                 captcha_key="",
+                 captcha_keys={},
                  sms_key="" 
                  ):     
         """
@@ -42,17 +43,18 @@ class Ninjemail():
 
         Args:
             browser (str, optional): The browser to be used for automation. Default is "firefox".
-            captcha_key (str, optional): The API key for the captcha solving service. Default is an empty string.
+            captcha_key (dict, optional): The API key for the captcha solving service. Default is an empty string.
             sms_key (str, optional): The API key for the SMS service. Default is an empty string.
         """
         self.browser = browser
-        self.captcha_key = captcha_key
+        self.captcha_keys = captcha_keys
         self.sms_key = sms_key
 
         self.captcha_services_supported = CAPTCHA_SERVICES_SUPPORTED
         self.default_captcha_service = DEFAULT_CAPTCHA_SERVICE
         self.sms_services_supported = SMS_SERVICES_SUPPORTED
         self.default_sms_service = DEFAULT_SMS_SERVICE
+        self.supported_solvers_by_email = SUPPORTED_SOLVERS_BY_EMAIL 
 
         #Set up logging
         self.setup_logging()
@@ -99,12 +101,20 @@ class Ninjemail():
             Email and password of the created account.
 
         """
+        api_key = None
+        for solver in self.supported_solvers_by_email['outlook']:
+            if solver in self.captcha_keys.keys():
+                api_key = self.captcha_keys[solver]
+        if not api_key:
+            logging.error('API key for captcha solver service to solve captcha for Outlook was not provided.')
+            logging.info(f'Supported captcha solving services for Outlook are: { self.supported_solvers_by_email["outlook"]}')
+            raise ValueError('API key for captcha solver service to solve captcha for outlook was not provided.')
         driver = create_driver(self.browser)
         username, password, first_name, last_name, \
             country, birthdate = generate_missing_info(username, password, first_name, last_name, country, birthdate)
         month, day, year = get_birthdate(birthdate)
 
-        return outlook.create_account(self.captcha_key,
+        return outlook.create_account(api_key,
                                       driver, 
                                       username, 
                                       password, 

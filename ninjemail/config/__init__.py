@@ -10,3 +10,8 @@ CAPTCHA_SERVICES_SUPPORTED = config.get("CAPTCHA_SERVICES_SUPPORTED", [])
 DEFAULT_CAPTCHA_SERVICE = config.get("DEFAULT_CAPTCHA_SERVICE", "")
 SMS_SERVICES_SUPPORTED = config.get("SMS_SERVICES_SUPPORTED", [])
 DEFAULT_SMS_SERVICE = config.get("DEFAULT_SMS_SERVICE", "")
+SUPPORTED_SOLVERS_BY_EMAIL = {}
+for item in config['SUPPORTED_SOLVERS_BY_EMAIL']:
+    email_service = item['email_service']
+    solvers = item['solvers']
+    SUPPORTED_SOLVERS_BY_EMAIL[email_service] = solvers
