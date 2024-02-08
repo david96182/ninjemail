@@ -5,7 +5,8 @@ from config import (
     DEFAULT_CAPTCHA_SERVICE,
     SMS_SERVICES_SUPPORTED,
     DEFAULT_SMS_SERVICE,
-    SUPPORTED_SOLVERS_BY_EMAIL
+    SUPPORTED_SOLVERS_BY_EMAIL,
+    SUPPORTED_BROWSERS
 )
 from email_providers import outlook
 from utils.webdriver_utils import create_driver
@@ -46,6 +47,8 @@ class Ninjemail():
             captcha_key (dict, optional): The API key for the captcha solving service. Default is an empty string.
             sms_key (str, optional): The API key for the SMS service. Default is an empty string.
         """
+        if browser not in SUPPORTED_BROWSERS:
+            raise ValueError(f"Unsupported browser '{browser}'. Supported browsers are: {', '.join(SUPPORTED_BROWSERS)}")
         self.browser = browser
         self.captcha_keys = captcha_keys
         self.sms_key = sms_key
