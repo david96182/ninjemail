@@ -96,7 +96,7 @@ class Ninjemail():
             hotmail (bool, optional): Flag indicating whether to create a Hotmail account. Default is False.
 
         Returns:
-            None
+            Email and password of the created account.
 
         """
         driver = create_driver(self.browser)

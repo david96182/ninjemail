@@ -129,11 +129,20 @@ def create_account(captcha_key,
 
     time.sleep(5)
     try:
-        continue_button = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[contains(text(), 'Click Button')]")))
-        continue_button.click()
+        acc_created_text = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[contains(text(), 'Your Microsoft account brings everything together ')]")))
+        if acc_created_text:
+            logging.info(f'{"Hotmail" if hotmail else "Outlook"} email account created successfully.')
+            logging.info("Account Details:")
+            logging.info(f"Email:      {username}@{'hotmail' if hotmail else 'outlook'}.com")
+            logging.info(f"Password:      {password}")
+            logging.info(f"First Name:    {first_name}")
+            logging.info(f"Last Name:     {last_name}")
+            logging.info(f"Country:       {country}")
+            logging.info(f"Date of Birth: {month}/{day}/{year}")
+            driver.quit()
+            return f"{username}@{'hotmail' if hotmail else 'outlook'}.com", password
     except:
-        pass
+        logging.error(f"There was an error creating the {'Hotmail' if hotmail else 'Outlook'} account.")
 
-    #driver.quit()
-
+    driver.quit()
 
