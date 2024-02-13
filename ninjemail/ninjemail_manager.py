@@ -112,7 +112,7 @@ class Ninjemail():
             logging.error('API key for captcha solver service to solve captcha for Outlook was not provided.')
             logging.info(f'Supported captcha solving services for Outlook are: { self.supported_solvers_by_email["outlook"]}')
             raise ValueError('API key for captcha solver service to solve captcha for outlook was not provided.')
-        driver = create_driver(self.browser)
+        driver = create_driver(self.browser, outlook=True)
         username, password, first_name, last_name, \
             country, birthdate = generate_missing_info(username, password, first_name, last_name, country, birthdate)
         month, day, year = get_birthdate(birthdate)

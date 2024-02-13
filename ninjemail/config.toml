@@ -3,7 +3,7 @@ CAPTCHA_SERVICES_SUPPORTED = ["deathbycaptcha", "capsolver"]
 DEFAULT_CAPTCHA_SERVICE = "deathbycaptcha"
 SMS_SERVICES_SUPPORTED = ["getsmscode"]
 DEFAULT_SMS_SERVICE = "getsmscode"
-SUPPORTED_BROWSERS = ['firefox']
+SUPPORTED_BROWSERS = ['firefox', 'chrome']
 
 [[SUPPORTED_SOLVERS_BY_EMAIL]]
 email_service = "outlook"

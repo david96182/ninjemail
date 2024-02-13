@@ -56,6 +56,18 @@ def create_account(captcha_key,
         api_key_input.send_keys(captcha_key)
         driver.find_element(By.ID, 'q-app').click()
         time.sleep(5)
+    elif type(driver) is webdriver.Chrome:
+        driver.get('https://www.google.com')
+        capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
+        capsolver_src = capsolver_src.get_attribute('src')
+        capsolver_ext_id = capsolver_src.split('/')[2]
+        driver.get(f'chrome-extension://{capsolver_ext_id}/www/index.html#/popup')
+        time.sleep(5)
+        
+        api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
+        api_key_input.send_keys(captcha_key)
+        driver.find_element(By.ID, 'q-app').click()
+        time.sleep(5)
     else:
         print("The WebDriver is not an instance of Firefox.")
 
@@ -85,7 +97,8 @@ def create_account(captcha_key,
     show_password_checkbox.click()
     driver.find_element(By.ID, 'iOptinEmail').click()
     driver.find_element(By.ID, 'PasswordInput').send_keys(password)
-    driver.find_element(By.ID, 'iSignupAction').click()
+    password_next = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'iSignupAction')))
+    password_next.click()
     
     driver.implicitly_wait(2)
 
