@@ -142,7 +142,7 @@ def create_account(captcha_key,
 
     time.sleep(5)
     try:
-        acc_created_text = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[contains(text(), 'Your Microsoft account brings everything together ')]")))
+        acc_created_text = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[contains(text(), 'A quick note about your Microsoft account')]")))
         if acc_created_text:
             logging.info(f'{"Hotmail" if hotmail else "Outlook"} email account created successfully.')
             logging.info("Account Details:")
