@@ -83,7 +83,8 @@ def  generate_missing_info(username, password, first_name, last_name, country, b
         country = fake.country()
 
     if not birthdate:
-        birthdate = fake.date(pattern='%m-%d-%Y')
+        birthdate = fake.date_of_birth(minimum_age=18)
+        birthdate = str(birthdate)
 
     if not username:
         first_initial = first_name[0].lower()
