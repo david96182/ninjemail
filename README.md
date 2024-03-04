@@ -1,4 +1,4 @@
-# Ninjemail
+<p align="center">   <img src="logo/logo.png" alt="Ninjemail logo"/> </p>
 
 Ninjemail is a Python library designed to streamline the process of creating email accounts across various top email provider services. With Ninjemail, you can automate the creation of email accounts, saving time and effort. It provides an easy-to-use interface for creating accounts with customizable options.
 
