@@ -8,7 +8,7 @@ from config import (
     SUPPORTED_SOLVERS_BY_EMAIL,
     SUPPORTED_BROWSERS
 )
-from email_providers import outlook
+from email_providers import outlook, gmail
 from utils.webdriver_utils import create_driver
 from utils import get_birthdate, generate_missing_info
 
@@ -20,7 +20,7 @@ class Ninjemail():
     Attributes:
         browser (str): The browser to be used for automation. Default is "firefox".
         captcha_key (str): The API key for the captcha solving service. Default is an empty string.
-        sms_key (str): The API key for the SMS service. Default is an empty string.
+        sms_key (dict): The API key for the SMS service. Default is an empty dict.
         captcha_services_supported (list): The list of supported captcha solving services.
         default_captcha_service (str): The default captcha solving service.
         sms_services_supported (list): The list of supported SMS services.
@@ -37,7 +37,7 @@ class Ninjemail():
     def __init__(self,
                  browser="firefox",
                  captcha_keys={},
-                 sms_key="" 
+                 sms_key={} 
                  ):     
         """
         Initializes a Ninjemail instance.
@@ -45,7 +45,7 @@ class Ninjemail():
         Args:
             browser (str, optional): The browser to be used for automation. Default is "firefox".
             captcha_key (dict, optional): The API key for the captcha solving service. Default is an empty string.
-            sms_key (str, optional): The API key for the SMS service. Default is an empty string.
+            sms_key (dict, optional): The API key for the SMS service. Default is an empty dict.
         """
         if browser not in SUPPORTED_BROWSERS:
             raise ValueError(f"Unsupported browser '{browser}'. Supported browsers are: {', '.join(SUPPORTED_BROWSERS)}")
@@ -129,3 +129,44 @@ class Ninjemail():
                                       year,
                                       hotmail)
 
+    def create_gmail_account(self, 
+                               username="", 
+                               password="", 
+                               first_name="", 
+                               last_name="",
+                               birthdate=""):
+        """
+        Creates an Gmail account using the provided information.
+
+        Args:
+            username (str, optional): The desired username for the Gmail account.
+            password (str, optional): The desired password for the Gmail account.
+            first_name (str, optional): The first name of the account holder.
+            last_name (str, optional): The last name of the account holder.
+            birthdate (str, optional): The birthdate of the account holder in the format "MM-DD-YYYY".
+
+        Returns:
+            Email and password of the created account.
+
+        """
+        
+        driver = create_driver(self.browser)
+        username, password, first_name, last_name, \
+            _, birthdate = generate_missing_info(username, password, first_name, last_name, '', birthdate)
+        month, day, year = get_birthdate(birthdate)
+        if not self.sms_key.keys(): 
+            logging.error('SMS API key for sms provider to verify account was not provided.')
+            logging.info(f'Supported sms services for GMAIL are: { self.sms_services_supported}')
+            raise ValueError('SMS API key for sms provider service to verify account for gmail was not provided.')
+        else:
+            self.sms_key.update({'project': 1})
+
+        return gmail.create_account(driver, 
+                                    self.sms_key,
+                                    username, 
+                                    password, 
+                                    first_name, 
+                                    last_name,
+                                    month,
+                                    day,
+                                    year)
