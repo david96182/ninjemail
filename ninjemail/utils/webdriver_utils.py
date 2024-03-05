@@ -16,23 +16,19 @@ def create_driver(browser, outlook=False):
 
         options = FirefoxOptions()
         options.add_argument('--no-sandbox')
-        #options.add_argument('--proxy-server=http://20.111.54.16:8123')
-        # options.add_argument("disable-popup-blocking")
-        # options.add_argument("disable-notifications")
-        # options.add_argument("disable-popup-blocking")
-        # options.add_argument('--ignore-ssl-errors=yes')
-        # options.add_argument('--ignore-certificate-errors')
-        # options.add_argument('--headless')
-        # options.add_argument("--incognito")
+        options.add_argument('--disable-gpu')
+        #options.add_argument('--proxy-server=http://72.10.160.92:26077')
+        options.add_argument('--headless')
         options.profile = custom_profile
 
         driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
     elif browser == 'chrome':
         options = ChromeOptions()
         options.add_argument('--no-sandbox')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--headless=new')
         if outlook:
             options.add_extension(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.crx'))
-        # options.add_argument('--headless')
 
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     else:
