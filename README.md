@@ -127,6 +127,29 @@ Ninjemail currently supports account creation for the following email providers:
 - Outlook/Hotmail
 - and more to come!
 
+## Supported SMS Services
+
+Ninjemail currently supports one SMS service provider for phone verification during account creation:
+
+**getsmscode.com**
+
+**Required Data:**
+
+To use getsmscode.com with Ninjemail, you'll need to acquire the following information:
+
+- **Username:** Your getsmscode.com username.
+- **Token:** Your API token from getsmscode.com.
+
+**Using getsmscode.com with Ninjemail:**
+
+1. Include the `sms_key` argument when initializing the Ninjemail object:
+
+   ```python
+   ninja = Ninjemail(sms_key={"user": "YOUR_USERNAME", "token": "YOUR_TOKEN"})
+   ```
+
+   Replace `YOUR_USERNAME` with your getsmscode.com username and `YOUR_TOKEN` with your API token.
+
 ## Contribution
 
 Contributions are welcome! If you have ideas for new features, encounter issues, or want to improve Ninjemail, feel free to contribute by opening issues and pull requests.
