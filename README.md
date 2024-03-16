@@ -157,3 +157,16 @@ Contributions are welcome! If you have ideas for new features, encounter issues,
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+
+## Disclaimer
+
+Ninjemail is provided solely for educational and informational purposes. It is explicitly stated that the intention behind Ninjemail is not to promote or engage in any illegal activities, including hacking or any other unauthorized actions.
+
+While using Ninjemail, it is crucial to understand and abide by the terms of service of each email provider you choose to utilize. Creating accounts that violate these terms of service may lead to the suspension or termination of your account by the respective email provider.
+
+To ensure responsible and lawful usage of Ninjemail, please consider the following additional points:
+
+1. Unethical Use: Under no circumstances should Ninjemail be employed for malicious or unethical activities, including but not limited to spamming, phishing, or identity theft. Such actions are strictly prohibited.
+2. Legal Compliance: You are solely responsible for ensuring that your use of Ninjemail is in full compliance with all applicable laws and regulations within your jurisdiction. Any misuse that violates the law is strictly discouraged.
+
+By choosing to use Ninjemail, you acknowledge and accept the aforementioned disclaimers and agree to utilize this service only for educational and lawful purposes. Any misuse or illegal activities conducted using Ninjemail are entirely the responsibility of the user, and the developers and providers of Ninjemail bear no liability for such actions.
