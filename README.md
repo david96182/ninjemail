@@ -53,7 +53,11 @@ from ninjemail import Ninjemail
 To create an instance of Ninjemail, call the `Ninjemail` class with optional parameters:
 
 ```python
-ninja = Ninjemail(browser="firefox", captcha_keys={"capsolver": "YOUR_API_KEY"}, sms_key={"user": "USERNAME", "token": "TOKEN"})
+ninja = Ninjemail(
+    		browser="firefox", 
+    		captcha_keys={"capsolver": "YOUR_API_KEY"}, 
+    		sms_key={"user": "USERNAME", "token": "TOKEN"}
+)
 ```
 
 The `browser` parameter specifies the browser to be used for automation. The default value is "firefox". Currently, **Firefox and Chrome are supported**.
@@ -67,7 +71,15 @@ The `sms_key` parameter is a dictionary that contains the **API key for the SMS 
 To create an Outlook/Hotmail account using Ninjemail, call the `create_outlook_account` method:
 
 ```python
-ninja.create_outlook_account(username="", password="", first_name="", last_name="", country="", birthdate="", hotmail=False)
+ninja.create_outlook_account(
+    				username="", 
+    				password="", 
+    				first_name="", 
+    				last_name="", 
+    				country="", 
+    				birthdate="", 
+    				hotmail=False
+)
 ```
 
 The `username` parameter is the desired username for the Outlook account. If not provided, a random username will be generated.
@@ -91,7 +103,13 @@ The method returns the email and password of the created account.
 To create a Gmail account using Ninjemail, call the `create_gmail_account` method:
 
 ```python
-ninja.create_gmail_account(username="", password="", first_name="", last_name="", birthdate="")
+ninja.create_gmail_account(
+    				username="", 
+    				password="", 
+    				first_name="", 
+    				last_name="", 
+    				birthdate=""
+)
 ```
 
 The parameters are the same as for creating an Outlook account, except there is no `country` parameter.
@@ -110,8 +128,17 @@ Here's an example that shows how to use Ninjemail to create an Outlook account:
 from ninjemail import Ninjemail
 
 # Replace "YOUR_API_KEY" with your actual API key
-ninja = Ninjemail(captcha_keys={"capsolver": "YOUR_API_KEY"}, sms_key={"user": "USERNAME", "token": "TOKEN"})
-email, password = ninja.create_outlook_account(username="testuser", password="testpassword", first_name="John", last_name="Doe", country="USA", birthdate="01-01-1990")
+ninja = Ninjemail(
+    		captcha_keys={"capsolver": "YOUR_API_KEY"},
+    		sms_key={"user": "USERNAME", "token": "TOKEN"})
+email, password = ninja.create_outlook_account(
+    							username="testuser", 
+    							password="testpassword", 
+    							first_name="John", 
+    							last_name="Doe", 
+    							country="USA", 
+    							birthdate="01-01-1990"
+)
 
 print(f"Email: {email}")
 print(f"Password: {password}")
@@ -145,9 +172,10 @@ To use getsmscode.com with Ninjemail, you'll need to acquire the following infor
 1. Include the `sms_key` argument when initializing the Ninjemail object:
 
    ```python
-   ninja = Ninjemail(sms_key={"user": "YOUR_USERNAME", "token": "YOUR_TOKEN"})
+   ninja = Ninjemail(sms_key={"user": "YOUR_USERNAME", 
+                              "token": "YOUR_TOKEN"})
    ```
-
+   
    Replace `YOUR_USERNAME` with your getsmscode.com username and `YOUR_TOKEN` with your API token.
 
 ## Contribution
