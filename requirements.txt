@@ -2,7 +2,7 @@ selenium
 webdriver-manager
 requests
 fake_useragent
-free_proxy
+free-proxy
 toml
 deathbycaptcha-official
 Faker

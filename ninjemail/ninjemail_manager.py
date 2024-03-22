@@ -14,6 +14,8 @@ from config import (
 from email_providers import outlook, gmail
 from utils.webdriver_utils import create_driver
 from utils import get_birthdate, generate_missing_info
+from fp.fp import FreeProxy
+from fp.errors import FreeProxyException
 
 
 class Ninjemail():
@@ -40,7 +42,9 @@ class Ninjemail():
     def __init__(self,
                  browser="firefox",
                  captcha_keys={},
-                 sms_key={} 
+                 sms_key={},
+                 proxy=None,
+                 auto_proxy=False
                  ):     
         """
         Initializes a Ninjemail instance.
@@ -49,6 +53,8 @@ class Ninjemail():
             browser (str, optional): The browser to be used for automation. Default is "firefox".
             captcha_key (dict, optional): The API key for the captcha solving service. Default is an empty string.
             sms_key (dict, optional): The API key for the SMS service. Default is an empty dict.
+            proxy (str, optional): The proxy to use for the webdriver. Default is None.
+            auto_proxy (bool, optional): Flag to indicate whether to use free proxies. Default is False.
         """
         if browser not in SUPPORTED_BROWSERS:
             raise ValueError(f"Unsupported browser '{browser}'. Supported browsers are: {', '.join(SUPPORTED_BROWSERS)}")
@@ -61,6 +67,9 @@ class Ninjemail():
         self.sms_services_supported = SMS_SERVICES_SUPPORTED
         self.default_sms_service = DEFAULT_SMS_SERVICE
         self.supported_solvers_by_email = SUPPORTED_SOLVERS_BY_EMAIL 
+        
+        self.proxy = proxy
+        self.auto_proxy = auto_proxy
 
         #Set up logging
         self.setup_logging()
@@ -90,7 +99,8 @@ class Ninjemail():
                                last_name="",
                                country="",
                                birthdate="",
-                               hotmail=False):
+                               hotmail=False,
+                               use_proxy=True):
         """
         Creates an Outlook/Hotmail account using the provided information.
 
@@ -102,6 +112,7 @@ class Ninjemail():
             country (str, optional): The country of residence for the account holder.
             birthdate (str, optional): The birthdate of the account holder in the format "MM-DD-YYYY".
             hotmail (bool, optional): Flag indicating whether to create a Hotmail account. Default is False.
+            use_proxy (bool, optional): Flag indicating whether to use proxy to create the account. Default is True.
 
         Returns:
             Email and password of the created account.
@@ -115,7 +126,20 @@ class Ninjemail():
             logging.error('API key for captcha solver service to solve captcha for Outlook was not provided.')
             logging.info(f'Supported captcha solving services for Outlook are: { self.supported_solvers_by_email["outlook"]}')
             raise ValueError('API key for captcha solver service to solve captcha for outlook was not provided.')
-        driver = create_driver(self.browser, outlook=True)
+
+        proxy = None
+        if use_proxy:
+            if self.proxy:
+                proxy = self.proxy
+            elif self.auto_proxy:
+                try:
+                    logging.info('Getting Free Proxy..')
+                    proxy = FreeProxy(country_id=['US']).get()
+                except FreeProxyException:
+                    logging.info('There are no free proxies available.')
+
+        driver = create_driver(self.browser, outlook=True, proxy=proxy)
+
         username, password, first_name, last_name, \
             country, birthdate = generate_missing_info(username, password, first_name, last_name, country, birthdate)
         month, day, year = get_birthdate(birthdate)
@@ -137,9 +161,10 @@ class Ninjemail():
                                password="", 
                                first_name="", 
                                last_name="",
-                               birthdate=""):
+                               birthdate="",
+                               use_proxy=True):
         """
-        Creates an Gmail account using the provided information.
+        Creates a Gmail account using the provided information.
 
         Args:
             username (str, optional): The desired username for the Gmail account.
@@ -147,16 +172,29 @@ class Ninjemail():
             first_name (str, optional): The first name of the account holder.
             last_name (str, optional): The last name of the account holder.
             birthdate (str, optional): The birthdate of the account holder in the format "MM-DD-YYYY".
+            use_proxy (bool, optional): Flag indicating whether to use proxy to create the account. Default is True.
 
         Returns:
             Email and password of the created account.
 
         """
-        
-        driver = create_driver(self.browser)
+        proxy = None
+        if use_proxy:
+            if self.proxy:
+                proxy = self.proxy
+            elif self.auto_proxy:
+                try:
+                    logging.info('Getting Free Proxy..')
+                    proxy = FreeProxy(country_id=['US']).get()
+                except FreeProxyException:
+                    logging.info('There are no free proxies available.')
+
+        driver = create_driver(self.browser, proxy=proxy)
+
         username, password, first_name, last_name, \
             _, birthdate = generate_missing_info(username, password, first_name, last_name, '', birthdate)
         month, day, year = get_birthdate(birthdate)
+
         if not self.sms_key.keys(): 
             logging.error('SMS API key for sms provider to verify account was not provided.')
             logging.info(f'Supported sms services for GMAIL are: { self.sms_services_supported}')
