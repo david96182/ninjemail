@@ -9,6 +9,8 @@ Ninjemail is a Python library designed to streamline the process of creating ema
 - **Customizable Options:** Customize account details such as username, password, first name, last name, country, and birthdate to meet your specific requirements.
 - **Error Handling and Logging:** Ninjemail provides error handling capabilities and logs activities to facilitate debugging and tracking of account creation actions.
 - **Open-Source and Extensible:** Being an open-source project, Ninjemail encourages contributions and allows for further extension and improvement of its functionalities.
+- **Proxy Support:** Ninjemail includes proxy support, giving users the option to use their own proxies for account creation. This feature allows for enhanced privacy, security, and flexibility during the email account creation process.
+- **Free Proxy Option:** Additionally, Ninjemail offers an option to automatically retrieve and use free proxies. This feature provides users with a convenient solution for proxy usage, eliminating the need for purchasing or configuring proxies separately.
 
 ## Installation
 
@@ -54,9 +56,11 @@ To create an instance of Ninjemail, call the `Ninjemail` class with optional par
 
 ```python
 ninja = Ninjemail(
-    		browser="firefox", 
-    		captcha_keys={"capsolver": "YOUR_API_KEY"}, 
-    		sms_key={"user": "USERNAME", "token": "TOKEN"}
+    	browser="firefox", 
+    	captcha_keys={"capsolver": "YOUR_API_KEY"}, 
+    	sms_key={"user": "USERNAME", "token": "TOKEN"},
+    	proxy='http://ip:port',
+    	auto_proxy=True
 )
 ```
 
@@ -66,19 +70,26 @@ The `captcha_keys` parameter is a dictionary that contains the **API keys for su
 
 The `sms_key` parameter is a dictionary that contains the **API key for the SMS service**, based on `config.toml`. The default value is an empty dictionary. You can provide an API key for the SMS service if required. Currently, **"getsmscode"** is supported.
 
+The `proxy` parameter specifies the proxy server to be used for the creation of the email accounts. It should be a string in the format "http://ip:port" where "ip" is the IP address of the proxy server and "port" is the port number. 
+
+The `auto_proxy` parameter is a boolean flag that determines whether Ninjemail should automatically obtain and rotate free proxies during automation tasks. If `auto_proxy` is set to `True`, Ninjemail will handle the process of acquiring and managing free proxies internally.
+
+Please note that when `auto_proxy` is enabled, Ninjemail will handle the management of proxies, but the availability and reliability of free proxies may vary. It's important to consider the limitations and potential risks associated with using free proxy services.
+
 ### Creating Outlook Accounts
 
 To create an Outlook/Hotmail account using Ninjemail, call the `create_outlook_account` method:
 
 ```python
 ninja.create_outlook_account(
-    				username="", 
-    				password="", 
-    				first_name="", 
-    				last_name="", 
-    				country="", 
-    				birthdate="", 
-    				hotmail=False
+    		username="", 
+    		password="", 
+    		first_name="", 
+    		last_name="", 
+    		country="", 
+    		birthdate="", 
+    		hotmail=False,
+    		use_proxy=True
 )
 ```
 
@@ -96,6 +107,8 @@ The `birthdate` parameter is the birthdate of the account holder in the format "
 
 The `hotmail` parameter is a boolean flag indicating whether to create a Hotmail account. The default value is False (i.e., creates an Outlook account).
 
+The `use_proxy` parameter determines whether to use a proxy for the process of creating an Outlook account. If `use_proxy` is set to `True`, a proxy will be utilized during the account creation process. Default is `True`.
+
 The method returns the email and password of the created account.
 
 ### Creating Gmail Accounts
@@ -104,11 +117,12 @@ To create a Gmail account using Ninjemail, call the `create_gmail_account` metho
 
 ```python
 ninja.create_gmail_account(
-    				username="", 
-    				password="", 
-    				first_name="", 
-    				last_name="", 
-    				birthdate=""
+    		username="", 
+    		password="", 
+    		first_name="", 
+    		last_name="", 
+    		birthdate="",
+    		use_proxy=True
 )
 ```
 
@@ -130,14 +144,15 @@ from ninjemail import Ninjemail
 # Replace "YOUR_API_KEY" with your actual API key
 ninja = Ninjemail(
     		captcha_keys={"capsolver": "YOUR_API_KEY"},
-    		sms_key={"user": "USERNAME", "token": "TOKEN"})
+    		sms_key={"user": "USERNAME", "token": "TOKEN"},
+			auto_proxy=True)
 email, password = ninja.create_outlook_account(
-    							username="testuser", 
-    							password="testpassword", 
-    							first_name="John", 
-    							last_name="Doe", 
-    							country="USA", 
-    							birthdate="01-01-1990"
+    					username="testuser", 
+    					password="testpassword", 
+    					first_name="John", 
+    					last_name="Doe", 
+    					country="USA", 
+    					birthdate="01-01-1990"
 )
 
 print(f"Email: {email}")
