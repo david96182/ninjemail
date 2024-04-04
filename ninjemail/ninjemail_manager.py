@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import random
 sys.path.append(os.path.dirname(__file__))
 
 from config import (
@@ -42,7 +43,7 @@ class Ninjemail():
     def __init__(self,
                  browser="firefox",
                  captcha_keys={},
-                 sms_key={},
+                 sms_keys={},
                  proxy=None,
                  auto_proxy=False
                  ):     
@@ -52,7 +53,7 @@ class Ninjemail():
         Args:
             browser (str, optional): The browser to be used for automation. Default is "firefox".
             captcha_key (dict, optional): The API key for the captcha solving service. Default is an empty string.
-            sms_key (dict, optional): The API key for the SMS service. Default is an empty dict.
+            sms_keys (dict, optional): The API key for the SMS service. Default is an empty dict.
             proxy (str, optional): The proxy to use for the webdriver. Default is None.
             auto_proxy (bool, optional): Flag to indicate whether to use free proxies. Default is False.
         """
@@ -60,7 +61,7 @@ class Ninjemail():
             raise ValueError(f"Unsupported browser '{browser}'. Supported browsers are: {', '.join(SUPPORTED_BROWSERS)}")
         self.browser = browser
         self.captcha_keys = captcha_keys
-        self.sms_key = sms_key
+        self.sms_keys = sms_keys
 
         self.captcha_services_supported = CAPTCHA_SERVICES_SUPPORTED
         self.default_captcha_service = DEFAULT_CAPTCHA_SERVICE
@@ -195,15 +196,22 @@ class Ninjemail():
             _, birthdate = generate_missing_info(username, password, first_name, last_name, '', birthdate)
         month, day, year = get_birthdate(birthdate)
 
-        if not self.sms_key.keys(): 
+        sms_key = {}
+        if not self.sms_keys.keys(): 
             logging.error('SMS API key for sms provider to verify account was not provided.')
             logging.info(f'Supported sms services for GMAIL are: { self.sms_services_supported}')
             raise ValueError('SMS API key for sms provider service to verify account for gmail was not provided.')
         else:
-            self.sms_key.update({'project': 1})
+            if self.default_sms_service in self.sms_keys:
+                sms_key['name'] = self.default_sms_service
+                sms_key['data'] = self.sms_keys[self.default_sms_service]
+            else:
+                selected_service = random.choice(list(self.sms_keys.keys()))
+                sms_key['name'] = selected_service
+                sms_key['data'] = self.sms_keys[selected_service]
 
         return gmail.create_account(driver, 
-                                    self.sms_key,
+                                    sms_key,
                                     username, 
                                     password, 
                                     first_name, 

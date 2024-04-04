@@ -7,10 +7,10 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementClickInterceptedException, StaleElementReferenceException
 from selenium import webdriver
-from sms_services import getsmscode
+from sms_services import getsmscode, smspool
 
 URL = 'https://accounts.google.com/signup'
-WAIT = 25
+WAIT = 5
 NEXT_BUTTON_XPATH = [
         "//button[@class='VfPpkd-LgbsSe VfPpkd-LgbsSe-OWXEXe-k8QpJ VfPpkd-LgbsSe-OWXEXe-dgl2Hf nCP5yc AjY5Oe DuMIQc LQeN7 qIypjc TrZEUc lw1w4b']",
         "//button[contains(text(),'Next')]",
@@ -53,7 +53,18 @@ def create_account(driver,
         Email and password of the created account.
 
     """
-    sms_provider = getsmscode.GetsmsCode(**sms_key)
+    SMS_SERVICE = sms_key['name']
+
+    if SMS_SERVICE == 'getsmscode':
+        data = sms_key['data'] 
+        data.update({'project': 1,
+                     'country': 'us'})
+        sms_provider = getsmscode.GetsmsCode(**data)
+    elif SMS_SERVICE == 'smspool':
+        data = sms_key['data']
+        data.update({'service': 395})
+        sms_provider = smspool.SMSPool(**data)
+
     logging.info('Creating Gmail account')
 
     driver.set_window_size(800, 600)
@@ -102,11 +113,19 @@ def create_account(driver,
     password_confirm_input.send_keys(password)
     next_button(driver)
 
-    phone = sms_provider.get_phone(send_prefix=True)
-    WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "phoneNumberId"))).send_keys(phone + Keys.ENTER)
+    if SMS_SERVICE == 'getsmscode':
+        phone = sms_provider.get_phone(send_prefix=True)
+    elif SMS_SERVICE == 'smspool':
+        phone, order_id = sms_provider.get_phone(send_prefix=True)
+    time.sleep(5)
+    WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "phoneNumberId"))).send_keys('+' + str(phone) + Keys.ENTER)
 
     try:
-        WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "code"))).send_keys(sms_provider.get_code(phone) + Keys.ENTER)
+        if SMS_SERVICE == 'getsmscode':
+            code = sms_provider.get_code(phone)
+        elif SMS_SERVICE == 'smspool':
+            code = sms_provider.get_code(order_id)
+        WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "code"))).send_keys(str(code) + Keys.ENTER)
     except (KeyboardInterrupt, Exception) as exc:
         raise exc
 
