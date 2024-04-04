@@ -58,7 +58,7 @@ To create an instance of Ninjemail, call the `Ninjemail` class with optional par
 ninja = Ninjemail(
     	browser="firefox", 
     	captcha_keys={"capsolver": "YOUR_API_KEY"}, 
-    	sms_key={"user": "USERNAME", "token": "TOKEN"},
+    	sms_keys={"service_name": {"user": "USERNAME", "token": "TOKEN"}},
     	proxy='http://ip:port',
     	auto_proxy=True
 )
@@ -68,7 +68,7 @@ The `browser` parameter specifies the browser to be used for automation. The def
 
 The `captcha_keys` parameter is a dictionary that contains the **API keys for supported captcha solving services**, based on `config.toml`. The default value is an empty dictionary. You can provide API keys for specific captcha solving services if required. Currently, **"capsolver"** is supported.
 
-The `sms_key` parameter is a dictionary that contains the **API key for the SMS service**, based on `config.toml`. The default value is an empty dictionary. You can provide an API key for the SMS service if required. Currently, **"getsmscode"** is supported.
+The `sms_keys` parameter is a dictionary that contains the **API key/s for the SMS service/s**, based on `config.toml`. The default value is an empty dictionary. You can provide an API key or keys for the SMS services if required. Currently, **"getsmscode"** and **"smspool"** are supported.
 
 The `proxy` parameter specifies the proxy server to be used for the creation of the email accounts. It should be a string in the format "http://ip:port" where "ip" is the IP address of the proxy server and "port" is the port number. 
 
@@ -144,7 +144,7 @@ from ninjemail import Ninjemail
 # Replace "YOUR_API_KEY" with your actual API key
 ninja = Ninjemail(
     		captcha_keys={"capsolver": "YOUR_API_KEY"},
-    		sms_key={"user": "USERNAME", "token": "TOKEN"},
+    		sms_keys={"getsmscode": {"user": "USERNAME", "token": "TOKEN"}},
 			auto_proxy=True)
 email, password = ninja.create_outlook_account(
     					username="testuser", 
@@ -171,7 +171,7 @@ Ninjemail currently supports account creation for the following email providers:
 
 ## Supported SMS Services
 
-Ninjemail currently supports one SMS service provider for phone verification during account creation:
+Ninjemail currently supports two SMS services providers for phone verification during account creation:
 
 **getsmscode.com**
 
@@ -184,14 +184,32 @@ To use getsmscode.com with Ninjemail, you'll need to acquire the following infor
 
 **Using getsmscode.com with Ninjemail:**
 
-1. Include the `sms_key` argument when initializing the Ninjemail object:
+1. Include the `sms_keys` argument when initializing the Ninjemail object:
 
    ```python
-   ninja = Ninjemail(sms_key={"user": "YOUR_USERNAME", 
-                              "token": "YOUR_TOKEN"})
+   ninja = Ninjemail(sms_keys={"getsmscode": {"user": "YOUR_USERNAME", 
+                              		"token": "YOUR_TOKEN"}})
    ```
    
    Replace `YOUR_USERNAME` with your getsmscode.com username and `YOUR_TOKEN` with your API token.
+
+**[smspool.net](https://smspool.net/?refferal=aumBFOq90I)**
+
+**Required Data:**
+
+To use smspool with Ninjemail, you'll need to acquire the following information:
+
+- **Token:** Your API token from smspool.
+
+**Using smspool.net with Ninjemail:**
+
+1. Include the `sms_keys` argument when initializing the Ninjemail object:
+
+   ```python
+   ninja = Ninjemail(sms_keys={"smspool": {"token": "YOUR_TOKEN"}})
+   ```
+
+   Replace `token` with your smspool API key.
 
 ## Contribution
 
