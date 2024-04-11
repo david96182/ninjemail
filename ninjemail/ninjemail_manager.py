@@ -12,7 +12,7 @@ from config import (
     SUPPORTED_SOLVERS_BY_EMAIL,
     SUPPORTED_BROWSERS
 )
-from email_providers import outlook, gmail
+from email_providers import outlook, gmail, yahoo
 from utils.webdriver_utils import create_driver
 from utils import get_birthdate, generate_missing_info
 from fp.fp import FreeProxy
@@ -26,7 +26,7 @@ class Ninjemail():
     Attributes:
         browser (str): The browser to be used for automation. Default is "firefox".
         captcha_key (str): The API key for the captcha solving service. Default is an empty string.
-        sms_key (dict): The API key for the SMS service. Default is an empty dict.
+        sms_keys (dict): The API key for the SMS service. Default is an empty dict.
         captcha_services_supported (list): The list of supported captcha solving services.
         default_captcha_service (str): The default captcha solving service.
         sms_services_supported (list): The list of supported SMS services.
@@ -139,7 +139,7 @@ class Ninjemail():
                 except FreeProxyException:
                     logging.info('There are no free proxies available.')
 
-        driver = create_driver(self.browser, outlook=True, proxy=proxy)
+        driver = create_driver(self.browser, captcha_extension=True, proxy=proxy)
 
         username, password, first_name, last_name, \
             country, birthdate = generate_missing_info(username, password, first_name, last_name, country, birthdate)
@@ -219,3 +219,78 @@ class Ninjemail():
                                     month,
                                     day,
                                     year)
+
+    def create_yahoo_account(self, 
+                               username="", 
+                               password="", 
+                               first_name="", 
+                               last_name="",
+                               birthdate="",
+                               myyahoo=False,
+                               use_proxy=True):
+        """
+        Creates a Yahoo/Myyahoo account using the provided information.
+
+        Args:
+            username (str, optional): The desired username for the Yahoo account.
+            password (str, optional): The desired password for the Yahoo account.
+            first_name (str, optional): The first name of the account holder.
+            last_name (str, optional): The last name of the account holder.
+            birthdate (str, optional): The birthdate of the account holder in the format "MM-DD-YYYY".
+            myyahoo (bool, optional): Flag indicating whether to create a Myyahoo account. Default is False.
+            use_proxy (bool, optional): Flag indicating whether to use proxy to create the account. Default is True.
+
+        Returns:
+            Email and password of the created account.
+
+        """
+        api_key = None
+        for solver in self.captcha_services_supported:
+            if solver in self.captcha_keys.keys():
+                api_key = self.captcha_keys[solver]
+        if not api_key:
+            logging.error('API key for captcha solver service to solve captcha for Yahoo was not provided.')
+            raise ValueError('API key for captcha solver service to solve captcha for yahoo was not provided.')
+
+        proxy = None
+        if use_proxy:
+            if self.proxy:
+                proxy = self.proxy
+            elif self.auto_proxy:
+                try:
+                    logging.info('Getting Free Proxy..')
+                    proxy = FreeProxy(country_id=['US']).get()
+                except FreeProxyException:
+                    logging.info('There are no free proxies available.')
+
+        driver = create_driver(self.browser, captcha_extension=True, proxy=proxy)
+
+        sms_key = {}
+        if not self.sms_keys.keys(): 
+            logging.error('SMS API key for sms provider to verify account was not provided.')
+            logging.info(f'Supported sms services for YAHOO are: { self.sms_services_supported}')
+            raise ValueError('SMS API key for sms provider service to verify account for yahoo was not provided.')
+        else:
+            if self.default_sms_service in self.sms_keys:
+                sms_key['name'] = self.default_sms_service
+                sms_key['data'] = self.sms_keys[self.default_sms_service]
+            else:
+                selected_service = random.choice(list(self.sms_keys.keys()))
+                sms_key['name'] = selected_service
+                sms_key['data'] = self.sms_keys[selected_service]
+
+        username, password, first_name, last_name, \
+            _, birthdate = generate_missing_info(username, password, first_name, last_name, '', birthdate)
+        month, day, year = get_birthdate(birthdate)
+
+        return yahoo.create_account(api_key,
+                                    driver, 
+                                    sms_key,
+                                    username, 
+                                    password, 
+                                    first_name, 
+                                    last_name,
+                                    month,
+                                    day,
+                                    year,
+                                    myyahoo)

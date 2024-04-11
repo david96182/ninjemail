@@ -3,7 +3,7 @@
 Ninjemail is a Python library designed to streamline the process of creating email accounts across various top email provider services. With Ninjemail, you can automate the creation of email accounts, saving time and effort. It provides an easy-to-use interface for creating accounts with customizable options.
 
 - **Automated Account Creation:** Ninjemail streamlines the process of creating email accounts by automating the necessary steps.
-- **Support for Major Email Providers:** Ninjemail supports a wide range of popular email service providers, giving you flexibility in choosing the provider that suits your needs.
+- **Support for Major Email Providers:** Ninjemail supports a wide range of popular email service providers including Gmail, Outlook and Yahoo, giving you flexibility in choosing the provider that suits your needs.
 - **Python Integration:** Ninjemail seamlessly integrates into Python projects, allowing for efficient automation of email account creation.
 - **Auto-generated Account Details:** Generate random account details for username, password, first name, last name, country, and birthdate if not provided, allowing for quick creation of multiple accounts for testing or other purposes.
 - **Customizable Options:** Customize account details such as username, password, first name, last name, country, and birthdate to meet your specific requirements.
@@ -128,6 +128,26 @@ ninja.create_gmail_account(
 
 The parameters are the same as for creating an Outlook account, except there is no `country` parameter.
 
+The method returns the email and password of the created gmail account.
+
+### Creating Yahoo Accounts
+
+To create a Yahoo account using Ninjemail, call the `create_yahoo_account` method:
+
+```python
+ninja.create_yahoo_account(
+    		username="", 
+    		password="", 
+    		first_name="", 
+    		last_name="", 
+    		birthdate="",
+    		myyahoo=False
+    		use_proxy=True
+)
+```
+
+The parameters are the same as for creating an Outlook account, except there is no 'country' parameter, and there is a specific parameter for a Yahoo account that is `myyahoo`. The `myyahoo` parameter is a boolean flag indicating whether to create a Myyahoo account. The default value is False (creates a Yahoo account).
+
 The method returns the email and password of the created account.
 
 ### Logging
@@ -141,7 +161,7 @@ Here's an example that shows how to use Ninjemail to create an Outlook account:
 ```python
 from ninjemail import Ninjemail
 
-# Replace "YOUR_API_KEY" with your actual API key
+# Replace "YOUR_API_KEY", "USERNAME" and "TOKEN" with your actual keys
 ninja = Ninjemail(
     		captcha_keys={"capsolver": "YOUR_API_KEY"},
     		sms_keys={"getsmscode": {"user": "USERNAME", "token": "TOKEN"}},
@@ -161,12 +181,34 @@ print(f"Password: {password}")
 
 This will create an Outlook account with the provided information and print the email and password of the created account.
 
+Here's an example that demonstrates how to use Ninjemail to create a Yahoo account without providing any user information. Ninjemail will generate all the necessary data for you, including name, birthdate, etc. This example utilizes smspool as the SMS service and chrome as the web browser:
+
+```python
+from ninjemail import Ninjemail
+
+# Replace "YOUR_API_KEY" and "TOKEN" with your actual API keys
+ninja = Ninjemail(
+    	    browser="chrome",
+    		captcha_keys={"capsolver": "YOUR_API_KEY"},
+    		sms_keys={"smspool": {"token": "TOKEN"}},
+			auto_proxy=True)
+email, password = ninja.create_yahoo_account(
+    					use_proxy=False
+)
+
+print(f"Email: {email}")
+print(f"Password: {password}")
+```
+
+This will create a Yahoo account with auto-generated information and will print the email and password of the created account.
+
 ## Supported Providers
 
 Ninjemail currently supports account creation for the following email providers:
 
 - Gmail
 - Outlook/Hotmail
+- Yahoo/Myyahoo
 - and more to come!
 
 ## Supported SMS Services

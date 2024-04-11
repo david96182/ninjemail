@@ -10,7 +10,7 @@ import os
 from urllib.parse import urlparse
 
 
-def create_driver(browser, outlook=False, proxy=None):
+def create_driver(browser, captcha_extension=False, proxy=None):
     if browser == 'firefox':
         custom_profile = FirefoxProfile()
         custom_profile.set_preference("extensions.ui.developer_mode", True)
@@ -46,7 +46,7 @@ def create_driver(browser, outlook=False, proxy=None):
         options.add_argument('--headless=new')
         if proxy:
             options.add_argument(f'--proxy-server={proxy}')
-        if outlook:
+        if captcha_extension:
             options.add_extension(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.crx'))
 
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
