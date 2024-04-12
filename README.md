@@ -1,6 +1,22 @@
 <p align="center">   <img src="logo/logo.png" alt="Ninjemail logo"/> </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.11-blue.svg?style=flat-square" alt="Python Badge">
+  <img src="https://img.shields.io/badge/code%20style-pep8-orange.svg?style=flat-square" alt="PEP8 Badge">
+  <a href="http://hits.dwyl.com/david96182/ninjemail" style="text-decoration: none;">
+    <img src="https://hits.dwyl.com/david96182/ninjemail.svg?style=flat-square&show=unique&color=blue" alt="HitCount Badge">
+  </a>
+  <img src="https://img.shields.io/github/license/david96182/ninjemail?style=flat-square" alt="GitHub License Badge">
+  <a href="http://makeapullrequest.com" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&color=purple" alt="PRs Welcome Badge">
+  </a>
+</p>
+
+------
+
 Ninjemail is a Python library designed to streamline the process of creating email accounts across various top email provider services. With Ninjemail, you can automate the creation of email accounts, saving time and effort. It provides an easy-to-use interface for creating accounts with customizable options.
+
+## Features
 
 - **Automated Account Creation:** Ninjemail streamlines the process of creating email accounts by automating the necessary steps.
 - **Support for Major Email Providers:** Ninjemail supports a wide range of popular email service providers including Gmail, Outlook and Yahoo, giving you flexibility in choosing the provider that suits your needs.
