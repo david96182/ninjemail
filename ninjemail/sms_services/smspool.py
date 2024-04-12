@@ -24,7 +24,7 @@ class SMSPool:
         get_code(phone): Retrieves the SMS verification code sent to the provided phone number.
 
     Exceptions:
-        APIError: Raised when an error occurs while interacting with the GetsmsCode API.
+        APIError: Raised when an error occurs while interacting with the SMSPool API.
     """
 
     _last_phone = None

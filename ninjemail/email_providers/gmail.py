@@ -41,6 +41,7 @@ def create_account(driver,
 
     Args:
         driver (WebDriver): The Selenium WebDriver instance for the configured browser.
+        sms_key(dict): The data of the SMS service.
         username (str): The desired username for the email account.
         password (str): The desired password for the email account.
         first_name (str): The first name for the account holder.
@@ -50,7 +51,7 @@ def create_account(driver,
         year (str): The birth year for the account holder.
 
     Returns:
-        Email and password of the created account.
+        tuple: Email and password of the created account.
 
     """
     SMS_SERVICE = sms_key['name']

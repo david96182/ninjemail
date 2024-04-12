@@ -25,16 +25,20 @@ class Ninjemail():
 
     Attributes:
         browser (str): The browser to be used for automation. Default is "firefox".
-        captcha_key (str): The API key for the captcha solving service. Default is an empty string.
-        sms_keys (dict): The API key for the SMS service. Default is an empty dict.
+        captcha_keys (dict): The API keys for captcha solving services. Default is an empty dictionary.
+        sms_keys (dict): The API keys for SMS services. Default is an empty dictionary.
         captcha_services_supported (list): The list of supported captcha solving services.
         default_captcha_service (str): The default captcha solving service.
         sms_services_supported (list): The list of supported SMS services.
         default_sms_service (str): The default SMS service.
+        supported_solvers_by_email (dict): The dictionary containing supported captcha solvers by email providers.
 
     Methods:
-        __init__(self, browser="firefox", captcha_key="", sms_key=""): Initializes a Ninjemail instance.
+        __init__(self, browser="firefox", captcha_keys={}, sms_keys={}, proxy=None, auto_proxy=False): Initializes a Ninjemail instance.
         setup_logging(self): Sets up the logging configuration for Ninjemail.
+        create_outlook_account(self, username="", password="", first_name="", last_name="", country="", birthdate="", hotmail=False, use_proxy=True): Creates an Outlook/Hotmail account using the provided information.
+        create_gmail_account(self, username="", password="", first_name="", last_name="", birthdate="", use_proxy=True): Creates a Gmail account using the provided information.
+        create_yahoo_account(self, username="", password="", first_name="", last_name="", birthdate="", myyahoo=False, use_proxy=True): Creates a Yahoo/Myyahoo account using the provided information.
 
     Logging:
         Logs are saved in the 'logs/ninjemail.log' file with a format of '[timestamp] [log_level]: log_message'.
@@ -52,8 +56,8 @@ class Ninjemail():
 
         Args:
             browser (str, optional): The browser to be used for automation. Default is "firefox".
-            captcha_key (dict, optional): The API key for the captcha solving service. Default is an empty string.
-            sms_keys (dict, optional): The API key for the SMS service. Default is an empty dict.
+            captcha_keys (dict, optional): The API keys for captcha solving services. Default is an empty dictionary.
+            sms_keys (dict, optional): The API keys for SMS services. Default is an empty dictionary.
             proxy (str, optional): The proxy to use for the webdriver. Default is None.
             auto_proxy (bool, optional): Flag to indicate whether to use free proxies. Default is False.
         """
@@ -113,10 +117,10 @@ class Ninjemail():
             country (str, optional): The country of residence for the account holder.
             birthdate (str, optional): The birthdate of the account holder in the format "MM-DD-YYYY".
             hotmail (bool, optional): Flag indicating whether to create a Hotmail account. Default is False.
-            use_proxy (bool, optional): Flag indicating whether to use proxy to create the account. Default is True.
+            use_proxy (bool, optional): Flag indicating whether to use a proxy to create the account. Default is True.
 
         Returns:
-            Email and password of the created account.
+            tuple: A tuple containing the username and password of the created account.
 
         """
         api_key = None
@@ -173,10 +177,10 @@ class Ninjemail():
             first_name (str, optional): The first name of the account holder.
             last_name (str, optional): The last name of the account holder.
             birthdate (str, optional): The birthdate of the account holder in the format "MM-DD-YYYY".
-            use_proxy (bool, optional): Flag indicating whether to use proxy to create the account. Default is True.
+            use_proxy (bool, optional): Flag indicating whether to use a proxy to create the account. Default is True.
 
         Returns:
-            Email and password of the created account.
+            tuple: A tuple containing the username and password of the created account.
 
         """
         proxy = None
@@ -238,11 +242,10 @@ class Ninjemail():
             last_name (str, optional): The last name of the account holder.
             birthdate (str, optional): The birthdate of the account holder in the format "MM-DD-YYYY".
             myyahoo (bool, optional): Flag indicating whether to create a Myyahoo account. Default is False.
-            use_proxy (bool, optional): Flag indicating whether to use proxy to create the account. Default is True.
+            use_proxy (bool, optional): Flag indicating whether to use a proxy to create the account. Default is True.
 
         Returns:
-            Email and password of the created account.
-
+            dict: A dictionary containing the email and password of the created account.
         """
         api_key = None
         for solver in self.captcha_services_supported:

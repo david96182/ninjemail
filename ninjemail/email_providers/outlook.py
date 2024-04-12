@@ -38,7 +38,7 @@ def create_account(captcha_key,
         hotmail (bool): Flag indicating whether to create a Hotmail account.
 
     Returns:
-        None
+        tuple: Email and password of the created account.
 
     """
     logging.info('Creating outlook account')

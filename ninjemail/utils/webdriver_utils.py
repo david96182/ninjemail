@@ -11,6 +11,27 @@ from urllib.parse import urlparse
 
 
 def create_driver(browser, captcha_extension=False, proxy=None):
+    """
+    Create a WebDriver instance for the specified browser with optional configurations.
+
+    Parameters:
+        browser (str): The name of the browser to use. Currently supports 'firefox' and 'chrome'.
+        captcha_extension (bool, optional): Whether to enable a captcha solving extension (default is False).
+        proxy (str, optional): Proxy server address in the format 'http://<ip_address>:<port>' or 'socks5://<ip_address>:<port>'.
+    
+    Returns:
+        WebDriver: An instance of WebDriver configured based on the provided parameters.
+
+    Raises:
+        ValueError: If an unsupported browser is specified.
+
+    Example:
+        To create a headless Firefox driver:
+        >>> driver = create_driver('firefox')
+
+        To create a headless Chrome driver with a proxy and captcha solving extension:
+        >>> driver = create_driver('chrome', captcha_extension=True, proxy='http://127.0.0.1:8080')
+    """
     if browser == 'firefox':
         custom_profile = FirefoxProfile()
         custom_profile.set_preference("extensions.ui.developer_mode", True)
