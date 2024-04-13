@@ -38,6 +38,7 @@ class Ninjemail():
         setup_logging(self): Sets up the logging configuration for Ninjemail.
         get_proxy(self): Returns a proxy if user provided one or tries to get a free proxy if auto_proxy is enabled.
         get_captcha_key(self, email_provider): Retrieves the captcha key for the specified email provider if available.
+        get_sms_key(self): Retrieves the SMS key for the default SMS service or a randomly chosen one if multiple provided.
         create_outlook_account(self, username="", password="", first_name="", last_name="", country="", birthdate="", hotmail=False, use_proxy=True): Creates an Outlook/Hotmail account using the provided information.
         create_gmail_account(self, username="", password="", first_name="", last_name="", birthdate="", use_proxy=True): Creates a Gmail account using the provided information.
         create_yahoo_account(self, username="", password="", first_name="", last_name="", birthdate="", myyahoo=False, use_proxy=True): Creates a Yahoo/Myyahoo account using the provided information.
@@ -126,6 +127,21 @@ class Ninjemail():
         logging.info(f'Supported captcha solving services for {email_provider} are: { self.supported_solvers_by_email[email_provider.lower()]}')
         raise ValueError(f"No captcha key provided for email provider: {email_provider}")
 
+    def get_sms_key(self):
+        """
+        Retrieves the SMS key for the default SMS service or a randomly chosen one if multiple provided.
+
+        Raises a ValueError if no SMS keys are provided.
+        """
+        if not self.sms_keys:
+            raise ValueError("No SMS API keys provided for SMS verification.")
+
+        if self.default_sms_service in self.sms_keys:
+            return {"name": self.default_sms_service, "data": self.sms_keys[self.default_sms_service]}
+        else:
+            selected_service = random.choice(list(self.sms_keys.keys()))
+            return {"name": selected_service, "data": self.sms_keys[selected_service]}
+
     def create_outlook_account(self, 
                                username="", 
                                password="", 
@@ -208,19 +224,7 @@ class Ninjemail():
             _, birthdate = generate_missing_info(username, password, first_name, last_name, '', birthdate)
         month, day, year = get_birthdate(birthdate)
 
-        sms_key = {}
-        if not self.sms_keys.keys(): 
-            logging.error('SMS API key for sms provider to verify account was not provided.')
-            logging.info(f'Supported sms services for GMAIL are: { self.sms_services_supported}')
-            raise ValueError('SMS API key for sms provider service to verify account for gmail was not provided.')
-        else:
-            if self.default_sms_service in self.sms_keys:
-                sms_key['name'] = self.default_sms_service
-                sms_key['data'] = self.sms_keys[self.default_sms_service]
-            else:
-                selected_service = random.choice(list(self.sms_keys.keys()))
-                sms_key['name'] = selected_service
-                sms_key['data'] = self.sms_keys[selected_service]
+        sms_key = self.get_sms_key()
 
         return gmail.create_account(driver, 
                                     sms_key,
@@ -263,19 +267,7 @@ class Ninjemail():
 
         driver = create_driver(self.browser, captcha_extension=True, proxy=proxy)
 
-        sms_key = {}
-        if not self.sms_keys.keys(): 
-            logging.error('SMS API key for sms provider to verify account was not provided.')
-            logging.info(f'Supported sms services for YAHOO are: { self.sms_services_supported}')
-            raise ValueError('SMS API key for sms provider service to verify account for yahoo was not provided.')
-        else:
-            if self.default_sms_service in self.sms_keys:
-                sms_key['name'] = self.default_sms_service
-                sms_key['data'] = self.sms_keys[self.default_sms_service]
-            else:
-                selected_service = random.choice(list(self.sms_keys.keys()))
-                sms_key['name'] = selected_service
-                sms_key['data'] = self.sms_keys[selected_service]
+        sms_key = self.get_sms_key()
 
         username, password, first_name, last_name, \
             _, birthdate = generate_missing_info(username, password, first_name, last_name, '', birthdate)
