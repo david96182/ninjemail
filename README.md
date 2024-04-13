@@ -3,14 +3,11 @@
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.11-blue.svg?style=flat-square" alt="Python Badge">
   <img src="https://img.shields.io/badge/code%20style-pep8-orange.svg?style=flat-square" alt="PEP8 Badge">
-  <a href="http://hits.dwyl.com/david96182/ninjemail" style="text-decoration: none;">
-    <img src="https://hits.dwyl.com/david96182/ninjemail.svg?style=flat-square&show=unique&color=blue" alt="HitCount Badge">
-  </a>
+  <img src="https://hits.dwyl.com/david96182/ninjemail.svg?style=flat-square&show=unique&color=blue" alt="HitCount Badge">
   <img src="https://img.shields.io/github/license/david96182/ninjemail?style=flat-square" alt="GitHub License Badge">
-  <a href="http://makeapullrequest.com" style="text-decoration: none;">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&color=purple" alt="PRs Welcome Badge">
-  </a>
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&color=purple" alt="PRs Welcome Badge">
 </p>
+
 
 ------
 
