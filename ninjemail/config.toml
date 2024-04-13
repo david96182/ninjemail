@@ -8,3 +8,7 @@ SUPPORTED_BROWSERS = ['firefox', 'chrome']
 [[SUPPORTED_SOLVERS_BY_EMAIL]]
 email_service = "outlook"
 solvers = ["capsolver"]
+
+[[SUPPORTED_SOLVERS_BY_EMAIL]]
+email_service = "yahoo"
+solvers = ["capsolver"]

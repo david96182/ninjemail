@@ -37,6 +37,7 @@ class Ninjemail():
         __init__(self, browser="firefox", captcha_keys={}, sms_keys={}, proxy=None, auto_proxy=False): Initializes a Ninjemail instance.
         setup_logging(self): Sets up the logging configuration for Ninjemail.
         get_proxy(self): Returns a proxy if user provided one or tries to get a free proxy if auto_proxy is enabled.
+        get_captcha_key(self, email_provider): Retrieves the captcha key for the specified email provider if available.
         create_outlook_account(self, username="", password="", first_name="", last_name="", country="", birthdate="", hotmail=False, use_proxy=True): Creates an Outlook/Hotmail account using the provided information.
         create_gmail_account(self, username="", password="", first_name="", last_name="", birthdate="", use_proxy=True): Creates a Gmail account using the provided information.
         create_yahoo_account(self, username="", password="", first_name="", last_name="", birthdate="", myyahoo=False, use_proxy=True): Creates a Yahoo/Myyahoo account using the provided information.
@@ -113,6 +114,18 @@ class Ninjemail():
                 logging.info('There are no free proxies available.')
         return None
 
+    def get_captcha_key(self, email_provider):
+        """
+        Retrieves the captcha key for the specified email provider if available.
+
+        Raises a ValueError if no captcha key is provided for the email provider.
+        """
+        for solver in self.supported_solvers_by_email.get(email_provider.lower(), []):
+            if solver in self.captcha_keys:
+                return self.captcha_keys[solver]
+        logging.info(f'Supported captcha solving services for {email_provider} are: { self.supported_solvers_by_email[email_provider.lower()]}')
+        raise ValueError(f"No captcha key provided for email provider: {email_provider}")
+
     def create_outlook_account(self, 
                                username="", 
                                password="", 
@@ -139,14 +152,7 @@ class Ninjemail():
             tuple: A tuple containing the username and password of the created account.
 
         """
-        api_key = None
-        for solver in self.supported_solvers_by_email['outlook']:
-            if solver in self.captcha_keys.keys():
-                api_key = self.captcha_keys[solver]
-        if not api_key:
-            logging.error('API key for captcha solver service to solve captcha for Outlook was not provided.')
-            logging.info(f'Supported captcha solving services for Outlook are: { self.supported_solvers_by_email["outlook"]}')
-            raise ValueError('API key for captcha solver service to solve captcha for outlook was not provided.')
+        captcha_key = self.get_captcha_key('outlook')
 
         proxy = None
         if use_proxy:
@@ -158,7 +164,7 @@ class Ninjemail():
             country, birthdate = generate_missing_info(username, password, first_name, last_name, country, birthdate)
         month, day, year = get_birthdate(birthdate)
 
-        return outlook.create_account(api_key,
+        return outlook.create_account(captcha_key,
                                       driver, 
                                       username, 
                                       password, 
@@ -249,13 +255,7 @@ class Ninjemail():
         Returns:
             dict: A dictionary containing the email and password of the created account.
         """
-        api_key = None
-        for solver in self.captcha_services_supported:
-            if solver in self.captcha_keys.keys():
-                api_key = self.captcha_keys[solver]
-        if not api_key:
-            logging.error('API key for captcha solver service to solve captcha for Yahoo was not provided.')
-            raise ValueError('API key for captcha solver service to solve captcha for yahoo was not provided.')
+        captcha_key = self.get_captcha_key('yahoo')
 
         proxy = None
         if use_proxy:
@@ -281,7 +281,7 @@ class Ninjemail():
             _, birthdate = generate_missing_info(username, password, first_name, last_name, '', birthdate)
         month, day, year = get_birthdate(birthdate)
 
-        return yahoo.create_account(api_key,
+        return yahoo.create_account(captcha_key,
                                     driver, 
                                     sms_key,
                                     username, 
