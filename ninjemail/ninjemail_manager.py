@@ -36,6 +36,7 @@ class Ninjemail():
     Methods:
         __init__(self, browser="firefox", captcha_keys={}, sms_keys={}, proxy=None, auto_proxy=False): Initializes a Ninjemail instance.
         setup_logging(self): Sets up the logging configuration for Ninjemail.
+        get_proxy(self): Returns a proxy if user provided one or tries to get a free proxy if auto_proxy is enabled.
         create_outlook_account(self, username="", password="", first_name="", last_name="", country="", birthdate="", hotmail=False, use_proxy=True): Creates an Outlook/Hotmail account using the provided information.
         create_gmail_account(self, username="", password="", first_name="", last_name="", birthdate="", use_proxy=True): Creates a Gmail account using the provided information.
         create_yahoo_account(self, username="", password="", first_name="", last_name="", birthdate="", myyahoo=False, use_proxy=True): Creates a Yahoo/Myyahoo account using the provided information.
@@ -97,6 +98,21 @@ class Ninjemail():
             datefmt='%Y-%m-%d %H:%M:%S'
         )
 
+    def get_proxy(self):
+        """
+        Returns a proxy if user provided one or tries to get a free proxy if auto_proxy is enabled.
+        """
+        if self.proxy:
+            return self.proxy
+        elif self.auto_proxy:
+            try:
+                logging.info('Getting Free Proxy..')
+                proxy = FreeProxy(country_id=['US']).get()
+                return proxy
+            except FreeProxyException:
+                logging.info('There are no free proxies available.')
+        return None
+
     def create_outlook_account(self, 
                                username="", 
                                password="", 
@@ -134,14 +150,7 @@ class Ninjemail():
 
         proxy = None
         if use_proxy:
-            if self.proxy:
-                proxy = self.proxy
-            elif self.auto_proxy:
-                try:
-                    logging.info('Getting Free Proxy..')
-                    proxy = FreeProxy(country_id=['US']).get()
-                except FreeProxyException:
-                    logging.info('There are no free proxies available.')
+            proxy = self.get_proxy()
 
         driver = create_driver(self.browser, captcha_extension=True, proxy=proxy)
 
@@ -185,14 +194,7 @@ class Ninjemail():
         """
         proxy = None
         if use_proxy:
-            if self.proxy:
-                proxy = self.proxy
-            elif self.auto_proxy:
-                try:
-                    logging.info('Getting Free Proxy..')
-                    proxy = FreeProxy(country_id=['US']).get()
-                except FreeProxyException:
-                    logging.info('There are no free proxies available.')
+            proxy = self.get_proxy()
 
         driver = create_driver(self.browser, proxy=proxy)
 
@@ -257,14 +259,7 @@ class Ninjemail():
 
         proxy = None
         if use_proxy:
-            if self.proxy:
-                proxy = self.proxy
-            elif self.auto_proxy:
-                try:
-                    logging.info('Getting Free Proxy..')
-                    proxy = FreeProxy(country_id=['US']).get()
-                except FreeProxyException:
-                    logging.info('There are no free proxies available.')
+            proxy = self.get_proxy()
 
         driver = create_driver(self.browser, captcha_extension=True, proxy=proxy)
 
