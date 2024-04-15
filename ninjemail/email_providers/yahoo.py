@@ -67,6 +67,8 @@ def create_account(captcha_key,
         api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
         api_key_input.send_keys(captcha_key)
         driver.find_element(By.ID, 'q-app').click()
+        
+        # solve recaptcha by token
         #token_recaptcha = driver.find_element(By.XPATH, '/html/body/div/div/div/main/div[2]/div[2]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/span')
         #token_recaptcha.click()
         time.sleep(5)
@@ -81,35 +83,36 @@ def create_account(captcha_key,
         api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
         api_key_input.send_keys(captcha_key)
         driver.find_element(By.ID, 'q-app').click()
+
+        # solve recaptcha by token
         #token_recaptcha = driver.find_element(By.XPATH, '/html/body/div/div/div/main/div[2]/div[2]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/span')
         #token_recaptcha.click()
         time.sleep(5)
 
     logging.info('Creating Yahoo account')
 
-    driver.set_window_size(800, 600)
     driver.get(URL)
-
     driver.implicitly_wait(2)
 
-    # Insert username
+    # insert username
     username_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'usernamereg-userId')))
     username_input.send_keys(username)
     time.sleep(1)
 
-    # Select myyahoo if myyahoo is True
+    # select myyahoo if myyahoo is True
     if myyahoo:
         email_domain_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'yid-domain-selector'))))
         email_domain_combobox.select_by_index(1)
 
-    # Insert password
+    # insert password
     password_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'usernamereg-password')))
     password_input.send_keys(password)
     time.sleep(2)
 
-    # Insert First and Last name
+    # insert First and Last name
     first_name_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'usernamereg-firstName')))
     first_name_input.send_keys(first_name)
+
     last_name_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'usernamereg-lastName')))
     last_name_input.send_keys(last_name)
     time.sleep(2)
@@ -118,8 +121,10 @@ def create_account(captcha_key,
     month_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'usernamereg-month'))))
     month_combobox.select_by_index(int(month))
     time.sleep(1)
+
     day_combobox = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'usernamereg-day')))
     day_combobox.send_keys(int(day))
+
     year_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'usernamereg-year')))
     year_input.send_keys(year)
 
@@ -128,6 +133,7 @@ def create_account(captcha_key,
     next_button = driver.find_element(By.ID, 'reg-submit-button')
     next_button.click()
 
+    # get and insert phone
     if SMS_SERVICE == 'getsmscode':
         phone = sms_provider.get_phone(send_prefix=False)
     elif SMS_SERVICE == 'smspool':
@@ -169,12 +175,14 @@ def create_account(captcha_key,
         except:
             pass
 
+    # check if captcha was not correctly solved
     current_url = driver.current_url
     if "challenge/fail" in current_url:
         logging.error("Error after solve captcha. Too many failed attempts.")
         driver.quit()
         return None, None
 
+    # verify sms
     try:
         if SMS_SERVICE == 'getsmscode':
             code = sms_provider.get_code(phone)
@@ -185,6 +193,7 @@ def create_account(captcha_key,
         logging.error("Error confirming phone number.")
         return None, None
 
+    # check if account was created successfully
     try:
         current_url = driver.current_url
         if "/create/success" in current_url:

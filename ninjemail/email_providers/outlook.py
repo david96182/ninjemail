@@ -68,10 +68,7 @@ def create_account(captcha_key,
         api_key_input.send_keys(captcha_key)
         driver.find_element(By.ID, 'q-app').click()
         time.sleep(5)
-    else:
-        print("The WebDriver is not an instance of Firefox.")
 
-    driver.set_window_size(800, 600)
     driver.get(URL)
 
     # Select create email
@@ -112,10 +109,13 @@ def create_account(captcha_key,
     # Insert Country and birthdate
     country_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'Country'))))
     country_combobox.select_by_visible_text(country)
+
     month_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'BirthMonth'))))
     month_combobox.select_by_index(int(month))
+
     day_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'BirthDay'))))
     day_combobox.select_by_index(int(day))
+
     year_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'BirthYear')))
     year_input.send_keys(year)
     driver.find_element(By.ID, 'iSignupAction').click()

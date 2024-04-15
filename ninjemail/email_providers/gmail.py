@@ -5,8 +5,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import ElementClickInterceptedException, StaleElementReferenceException
-from selenium import webdriver
 from sms_services import getsmscode, smspool
 
 URL = 'https://accounts.google.com/signup'
@@ -59,7 +57,7 @@ def create_account(driver,
     if SMS_SERVICE == 'getsmscode':
         data = sms_key['data'] 
         data.update({'project': 1,
-                     'country': 'us'})
+                     'country': 'hk'})
         sms_provider = getsmscode.GetsmsCode(**data)
     elif SMS_SERVICE == 'smspool':
         data = sms_key['data']
@@ -68,29 +66,31 @@ def create_account(driver,
 
     logging.info('Creating Gmail account')
 
-    driver.set_window_size(800, 600)
     driver.get(URL)
-
     driver.implicitly_wait(2)
 
-    # Insert first and last name
+    # insert first and last name
     name_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'firstName')))
     name_input.send_keys(first_name)
     lastname_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'lastName')))
     lastname_input.send_keys(last_name)
     next_button(driver)
 
-    # birthdate
+    # select birthdate
     time.sleep(10)
     month_combobox = Select(WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, 'month'))))
     month_combobox.select_by_index(month)
     # driver.find_element(By.XPATH, f'//*[@id="month"]/option[{month}]').click() alternative
+
     day_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.XPATH, '//input[@name="day"]')))
     driver.execute_script("arguments[0].scrollIntoView();", day_input)
     driver.execute_script("arguments[0].setAttribute('value', arguments[1]);", day_input, int(day))
+
     year_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'year')))
     driver.execute_script("arguments[0].scrollIntoView();", year_input)
     driver.execute_script("arguments[0].setAttribute('value', arguments[1]);", year_input, year)
+
+    # gender
     gender_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'gender'))))
     gender_combobox.select_by_index(3)
     next_button(driver)
@@ -99,40 +99,56 @@ def create_account(driver,
     try:
         create_input = WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, 'selectionc4')))
         create_input.click()
-    except Exception as error:
+    except:
         pass
 
-    time.sleep(10)
+    # insert username
+    time.sleep(4)
     username_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.NAME, 'Username')))
     username_input.send_keys(username)
     next_button(driver)
 
-    # Insert Password
+    # insert Password
     password_input = WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.NAME, 'Passwd')))
     password_input.send_keys(password)
     password_confirm_input = WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.NAME, 'PasswdAgain')))
     password_confirm_input.send_keys(password)
     next_button(driver)
 
-    if SMS_SERVICE == 'getsmscode':
-        phone = sms_provider.get_phone(send_prefix=True)
-    elif SMS_SERVICE == 'smspool':
-        phone, order_id = sms_provider.get_phone(send_prefix=True)
-    time.sleep(5)
-    WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "phoneNumberId"))).send_keys('+' + str(phone) + Keys.ENTER)
+    try:
+        WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Sorry, we could not create your Google Account.')]")))
+        logging.error("Error from Google, message: 'Sorry, we could not create your Google Account.'.")
+        driver.quit()
+        return None, None
+    except:
+        pass
 
+    # phone verification
+    try:
+        if SMS_SERVICE == 'getsmscode':
+            phone = sms_provider.get_phone(send_prefix=True)
+        elif SMS_SERVICE == 'smspool':
+            phone, order_id = sms_provider.get_phone(send_prefix=True)
+        time.sleep(5)
+        WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "phoneNumberId"))).send_keys('+' + str(phone) + Keys.ENTER)
+    except Exception as e:
+        logging.error('Failed to enter phone number: %s', str(e))
+        raise 
+
+    # sms verification
     try:
         if SMS_SERVICE == 'getsmscode':
             code = sms_provider.get_code(phone)
         elif SMS_SERVICE == 'smspool':
             code = sms_provider.get_code(order_id)
         WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "code"))).send_keys(str(code) + Keys.ENTER)
-    except (KeyboardInterrupt, Exception) as exc:
-        raise exc
+    except Exception as e:
+        logging.error('Failed to enter SMS code: %s', str(e))
+        raise
 
     time.sleep(5)
     driver.find_elements(By.TAG_NAME, "button")[-1].click()
-    # recuperation phone (skip)
+    # phone recovery (skip)
     next_button(driver)
 
     # final step
@@ -140,20 +156,16 @@ def create_account(driver,
     next_button(driver)
     time.sleep(8)
 
+    # log and return results
     logging.info("Verification complete.")
     logging.info("IF YOU ACCESS THIS ACCOUNT IMMEDIATELY FROM A DIFFERENT IP IT WILL BE BANNED")
-    
-    try:
-        logging.info('Gmail email account created successfully.')
-        logging.info("Account Details:")
-        logging.info(f"Email:      {username}@gmail.com")
-        logging.info(f"Password:      {password}")
-        logging.info(f"First Name:    {first_name}")
-        logging.info(f"Last Name:     {last_name}")
-        logging.info(f"Date of Birth: {month}/{day}/{year}")
-        driver.quit()
-        return f"{username}@gmail.com", password
-    except:
-        logging.error("There was an error creating the Gmail account.")
 
+    logging.info('Gmail email account created successfully.')
+    logging.info("Account Details:")
+    logging.info(f"Email:      {username}@gmail.com")
+    logging.info(f"Password:      {password}")
+    logging.info(f"First Name:    {first_name}")
+    logging.info(f"Last Name:     {last_name}")
+    logging.info(f"Date of Birth: {month}/{day}/{year}")
     driver.quit()
+    return f"{username}@gmail.com", password
