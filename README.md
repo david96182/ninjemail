@@ -53,6 +53,36 @@ To install Ninjemail, you can follow these steps:
 
 You can then proceed to use Ninjemail as described in the next instructions.
 
+## Testing
+
+To ensure the reliability and correctness of this project, tests have been implemented using [pytest](https://pytest.org/). The test suite covers various aspects of the codebase and helps maintain the desired functionality as the project evolves.
+
+### Running Tests
+
+1. Make sure you have the project's dependencies installed.
+
+2. Navigate to the project's root directory.
+
+3. Run the following command to execute the test suite:
+
+   ```bash
+   pytest
+   ```
+
+### Test Coverage
+
+Comprehensive test coverage is prioritized to minimize bugs and regressions. The current code coverage can be measured using pytest-cov. To generate a coverage report, users can execute the following command:
+
+```bash
+pytest --cov
+```
+
+The coverage report will be displayed in the terminal.
+
+### Writing Tests
+
+When adding new features or fixing bugs, it's important to include corresponding test cases to validate the changes. Tests should be placed in the `tests/` directory, following a naming convention such as `test_module.py` or `test_class.py`. You can organize the tests based on the project's structure.
+
 ## Usage
 
 ### Importing the Library
