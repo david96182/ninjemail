@@ -6,8 +6,9 @@
   <img src="https://hits.dwyl.com/david96182/ninjemail.svg?style=flat-square&show=unique&color=blue" alt="HitCount Badge">
   <img src="https://img.shields.io/github/license/david96182/ninjemail?style=flat-square" alt="GitHub License Badge">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&color=purple" alt="PRs Welcome Badge">
+  <img src="https://img.shields.io/github/actions/workflow/status/david96182/ninjemail/ci.yml?style=flat-square&label=tests" alt="Test status">
+  <img src="https://img.shields.io/codecov/c/github/david96182/ninjemail?style=flat-square" alt="Test coverage Badge">
 </p>
-
 
 ------
 
