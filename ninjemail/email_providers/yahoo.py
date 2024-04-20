@@ -143,21 +143,6 @@ def create_account(captcha_key,
 
     wait = WebDriverWait(driver, 5) # wait for capsolver extension to solve the captcha
     try:
-        # funcaptcha challenge
-        WebDriverWait(driver, WAIT).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "arkose-iframe")))
-        while True:
-            try:
-                h2_element = wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'Security check')]")))
-            except:
-                break
-
-        try:
-            challenge_complete = wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'Security check complete')]")))
-            continue_button = driver.find_element(By.ID, 'arkose-submit')
-            continue_button.click()
-        except:
-            logging.error("Captcha was not solved.")
-    except:
         # recaptcha challenge
         WebDriverWait(driver, WAIT).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "recaptcha-iframe")))
         time.sleep(10)
@@ -174,6 +159,21 @@ def create_account(captcha_key,
             driver.switch_to.default_content()
         except:
             pass
+    except:
+        # funcaptcha challenge
+        try:
+            WebDriverWait(driver, WAIT).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "arkose-iframe")))
+            while True:
+                try:
+                    h2_element = wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'Security check')]")))
+                except:
+                    break
+        
+            challenge_complete = wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'Security check complete')]")))
+            continue_button = driver.find_element(By.ID, 'arkose-submit')
+            continue_button.click()
+        except:
+            logging.error("Captcha was not solved.")
 
     # check if captcha was not correctly solved
     current_url = driver.current_url

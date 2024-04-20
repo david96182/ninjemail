@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
 
 URL = 'https://signup.live.com/signup'
@@ -130,15 +131,15 @@ def create_account(captcha_key,
     next_button.click()
 
     wait = WebDriverWait(driver, 60) # wait for capsolver extension to solve the captcha
-    while True:
+    for _ in range(3):
         try:
             h2_element = wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'Something went wrong. Please reload the challenge to try again.')]")))
 
-            if h2_element:
+            if h2_element and isinstance(h2_element, WebElement):
                 button = driver.find_element(By.XPATH, "//button[contains(text(), 'Reload Challenge')]")
                 button.click()
         except:
-            break 
+            break
 
     time.sleep(5)
     try:
@@ -156,6 +157,7 @@ def create_account(captcha_key,
             return f"{username}@{'hotmail' if hotmail else 'outlook'}.com", password
     except:
         logging.error(f"There was an error creating the {'Hotmail' if hotmail else 'Outlook'} account.")
+        return None, None
 
     driver.quit()
 

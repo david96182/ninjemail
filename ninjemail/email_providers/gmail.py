@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
 from sms_services import getsmscode, smspool
 
 URL = 'https://accounts.google.com/signup'
@@ -116,10 +117,11 @@ def create_account(driver,
     next_button(driver)
 
     try:
-        WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Sorry, we could not create your Google Account.')]")))
-        logging.error("Error from Google, message: 'Sorry, we could not create your Google Account.'.")
-        driver.quit()
-        return None, None
+        element = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Sorry, we could not create your Google Account.')]")))
+        if element and isinstance(element, WebElement):
+            logging.error("Error from Google, message: 'Sorry, we could not create your Google Account.'.")
+            driver.quit()
+            return None, None
     except:
         pass
 
