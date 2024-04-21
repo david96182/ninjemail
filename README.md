@@ -301,6 +301,12 @@ To use smspool with Ninjemail, you'll need to acquire the following information:
 
 Contributions are welcome! If you have ideas for new features, encounter issues, or want to improve Ninjemail, feel free to contribute by opening issues and pull requests.
 
+## Community
+
+Join the Ninjemail community to connect with other users, ask questions, and get support. We have a Telegram group where you can actively participate in discussions related to the library.
+
+- Telegram Group: Join the Ninjemail Community on Telegram [here](https://t.me/ninjemail).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
