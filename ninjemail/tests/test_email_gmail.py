@@ -58,6 +58,9 @@ def mock_get_phone_getsmscode(self, *args, **kwargs):
 def mock_get_phone_smspool(self, *args, **kwargs):
     return 'ordeid', '111111111'
 
+def mock_get_phone_fivesim(self, *args, **kwargs):
+    return 'ordeid', '111111111'
+
 def mock_get_code(self, *arg, **kwargs):
     return '000000'
 
@@ -102,6 +105,31 @@ def test_create_account_chrome_and_smspool(monkeypatch):
         "name": "smspool",
         "data": {
             "token": "your_api_key",
+        }
+    }
+    username = "testuser"
+    password = "testpassword"
+    first_name = "John"
+    last_name = "Doe"
+    month = "1"
+    day = "1"
+    year = "2000"
+
+    email, password = create_account(driver, sms_key, username, password, first_name, last_name, month, day, year)
+    assert email == f"{username}@gmail.com"
+    assert password == "testpassword"
+
+def test_create_account_chrome_and_fivesim(monkeypatch):
+    monkeypatch.setattr('sms_services.fivesim.FiveSim.get_phone', mock_get_phone_fivesim)
+    monkeypatch.setattr('sms_services.fivesim.FiveSim.get_code', mock_get_code)
+
+    driver = create_driver('chrome')
+    # Test data
+    sms_key = {
+        "name": "5sim",
+        "data": {
+            "token": "your_api_key",
+            "service": "google"
         }
     }
     username = "testuser"

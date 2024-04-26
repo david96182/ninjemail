@@ -112,7 +112,7 @@ The `browser` parameter specifies the browser to be used for automation. The def
 
 The `captcha_keys` parameter is a dictionary that contains the **API keys for supported captcha solving services**, based on `config.toml`. The default value is an empty dictionary. You can provide API keys for specific captcha solving services if required. Currently, **"capsolver"** is supported.
 
-The `sms_keys` parameter is a dictionary that contains the **API key/s for the SMS service/s**, based on `config.toml`. The default value is an empty dictionary. You can provide an API key or keys for the SMS services if required. Currently, **"getsmscode"** and **"smspool"** are supported.
+The `sms_keys` parameter is a dictionary that contains the **API key/s for the SMS service/s**, based on `config.toml`. The default value is an empty dictionary. You can provide an API key or keys for the SMS services if required. Currently, **"getsmscode"**, **"smspool"** and **"5sim"** are supported.
 
 The `proxy` parameter specifies the proxy server to be used for the creation of the email accounts. It should be a string in the format "http://ip:port" where "ip" is the IP address of the proxy server and "port" is the port number. 
 
@@ -258,7 +258,7 @@ Ninjemail currently supports account creation for the following email providers:
 
 ## Supported SMS Services
 
-Ninjemail currently supports two SMS services providers for phone verification during account creation:
+Ninjemail currently supports three SMS services providers for phone verification during account creation:
 
 **getsmscode.com**
 
@@ -297,6 +297,24 @@ To use smspool with Ninjemail, you'll need to acquire the following information:
    ```
 
    Replace `token` with your smspool API key.
+
+**[5sim](https://5sim.net/)**
+
+**Required Data:**
+
+To use 5sim with Ninjemail, you'll need to acquire the following information:
+
+- **Token:** Your API token from 5sim.
+
+**Using 5sim with Ninjemail:**
+
+1. Include the `sms_keys` argument when initializing the Ninjemail object:
+
+   ```python
+   ninja = Ninjemail(sms_keys={"5sim": {"token": "YOUR_TOKEN"}})
+   ```
+
+   Replace `token` with your 5sim API key.
 
 ## Contribution
 

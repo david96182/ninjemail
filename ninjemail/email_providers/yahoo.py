@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
-from sms_services import getsmscode, smspool
+from sms_services import getsmscode, smspool, fivesim
 import undetected_chromedriver as uc
 
 URL = 'https://login.yahoo.com/account/create'
@@ -55,6 +55,10 @@ def create_account(captcha_key,
         data = sms_key['data']
         data.update({'service': 1034})
         sms_provider = smspool.SMSPool(**data)
+    elif SMS_SERVICE == '5sim':
+        data = sms_key['data']
+        data.update({'service': 'yahoo'})
+        sms_provider = fivesim.FiveSim(**data)
 
     if type(driver) is webdriver.Firefox:
         driver.install_addon(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.xpi'))
@@ -137,7 +141,7 @@ def create_account(captcha_key,
     # get and insert phone
     if SMS_SERVICE == 'getsmscode':
         phone = sms_provider.get_phone(send_prefix=False)
-    elif SMS_SERVICE == 'smspool':
+    elif SMS_SERVICE == 'smspool' or SMS_SERVICE == '5sim':
         phone, order_id = sms_provider.get_phone(send_prefix=False)
     time.sleep(2)
     WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "usernamereg-phone"))).send_keys(str(phone) + Keys.ENTER)
@@ -187,7 +191,7 @@ def create_account(captcha_key,
     try:
         if SMS_SERVICE == 'getsmscode':
             code = sms_provider.get_code(phone)
-        elif SMS_SERVICE == 'smspool':
+        elif SMS_SERVICE == 'smspool' or  SMS_SERVICE == '5sim':
             code = sms_provider.get_code(order_id) 
         WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "verification-code-field"))).send_keys(str(code) + Keys.ENTER)
     except:

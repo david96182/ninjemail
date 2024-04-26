@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
-from sms_services import getsmscode, smspool
+from sms_services import getsmscode, smspool, fivesim
 
 URL = 'https://accounts.google.com/signup'
 WAIT = 5
@@ -64,6 +64,10 @@ def create_account(driver,
         data = sms_key['data']
         data.update({'service': 395})
         sms_provider = smspool.SMSPool(**data)
+    elif SMS_SERVICE == '5sim':
+        data = sms_key['data']
+        data.update({'service': 'google'})
+        sms_provider = fivesim.FiveSim(**data)
 
     logging.info('Creating Gmail account')
 
@@ -129,7 +133,7 @@ def create_account(driver,
     try:
         if SMS_SERVICE == 'getsmscode':
             phone = sms_provider.get_phone(send_prefix=True)
-        elif SMS_SERVICE == 'smspool':
+        elif SMS_SERVICE == 'smspool' or SMS_SERVICE == '5sim':
             phone, order_id = sms_provider.get_phone(send_prefix=True)
         time.sleep(5)
         WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "phoneNumberId"))).send_keys('+' + str(phone) + Keys.ENTER)
@@ -141,7 +145,7 @@ def create_account(driver,
     try:
         if SMS_SERVICE == 'getsmscode':
             code = sms_provider.get_code(phone)
-        elif SMS_SERVICE == 'smspool':
+        elif SMS_SERVICE == 'smspool' or  SMS_SERVICE == '5sim':
             code = sms_provider.get_code(order_id)
         WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, "code"))).send_keys(str(code) + Keys.ENTER)
     except Exception as e:
