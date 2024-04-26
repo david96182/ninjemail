@@ -1,0 +1,168 @@
+{
+  "extName": {
+    "message": "Captcha Solver: Auto Recognition and Bypass"
+  },
+  "extDescription": {
+    "message": "该插件拓展程序有助于解决网站页面上的验证码。无论处于什么网页，该拓展程序都能帮助您自动识别网页上的验证码"
+  },
+  "extShortName": {
+    "message": "Captcha Solver"
+  },
+  "optionsPageTitle": {
+    "message": "设置2CAPTCHA 拓展程序"
+  },
+  "accountSettings": {
+    "message": "设置账户:"
+  },
+  "apiKey": {
+    "message": "API 密钥:"
+  },
+  "connect": {
+    "message": "联系"
+  },
+  "doNotHaveApiKey": {
+    "message": "没有API密钥?"
+  },
+  "createAccountToGetIt": {
+    "message": "<a href=\"#\" data-lang-link=\"$link$\" target=\"_blank\">创建一个账户</a> 可获取API 密钥.",
+    "placeholders": {
+      "link": {
+        "content": "$1"
+      }
+    }
+  },
+  "generalSettings": {
+    "message": "一般设置:"
+  },
+  "enablePlugin": {
+    "message": "启用插件"
+  },
+  "submitFormsAutomatically": {
+    "message": "自动提交表格"
+  },
+  "settingsLink": {
+    "message": "設置"
+  },
+  "manualLink": {
+    "message": "手動的"
+  },
+  "enabledSolveAutomatically": {
+    "message": "启用/自动解决"
+  },
+  "minScore": {
+    "message": "最小分值:"
+  },
+  "haveAnyQuestions": {
+    "message": "有任何问题或者建议?"
+  },
+  "contactUs": {
+    "message": "联系我们: <a href=\"mailto:$email$\">$email$</a>",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "balance": {
+    "message": "余额"
+  },
+  "login": {
+    "message": "登陆"
+  },
+  "logout": {
+    "message": "登出"
+  },
+  "accountSuccessfullyConnected": {
+    "message": "账户关联成功!"
+  },
+  "solveWithCapsolver": {
+    "message": "使用Capsolver解决"
+  },
+  "solving": {
+    "message": "正在解决..."
+  },
+  "solved": {
+    "message": "验证码解决成功啦!"
+  },
+  "delay": {
+    "message": "延迟"
+  },
+  "seconds": {
+    "message": "秒"
+  },
+  "ifErrorRepeat": {
+    "message": "如有错误，请重复"
+  },
+  "times": {
+    "message": "时间"
+  },
+  "proxySettings": {
+    "message": "Proxy设置"
+  },
+  "useProxy": {
+    "message": "使用代理服务器"
+  },
+  "proxyType": {
+    "message": "代理类型"
+  },
+  "images": {
+    "message": "图片"
+  },
+  "markAsCaptchaSource": {
+    "message": "标记为验证码来源"
+  },
+  "putCaptchaAnswerHere": {
+    "message": "把验证码答案放在这里"
+  },
+  "normalManual": {
+    "message": "带有验证码的图像的位置被保存。 现在选择把答案放在哪里."
+  },
+  "autoSubmitRules": {
+    "message": "自动提交规则"
+  },
+  "autoSubmitDescription": {
+    "message": "默认情况下，“自动提交”功能提交包含验证码答案字段的表单。 如果验证码解决后还必须做其他事情，例如必须点击某个按钮，请在此处定义:"
+  },
+  "autoSubmitNoRules": {
+    "message": "还没有添加规则..."
+  },
+  "autoSubmitCreateNewRule": {
+    "message": "创建新规则"
+  },
+  "autoSubmitAlertFormOpened": {
+    "message": "请先保存或取消之前打开的表格！"
+  },
+  "autoSubmitAlertUrlRequired": {
+    "message": "网址格式为必填项！"
+  },
+  "autoSubmitAlertUrlInvalid": {
+    "message": "URL 模式必须是有效的正则表达式！"
+  },
+  "autoSubmitAlertCodeRequired": {
+    "message": "需要代码！"
+  },
+  "autoSubmitConfirmDelete": {
+    "message": "删除规则"
+  },
+  "autoSubmitPlaceholderUrl": {
+    "message": "URL 模式（regexp），例如:"
+  },
+  "autoSubmitPlaceholderCode": {
+    "message": "要执行的操作序列，例如:"
+  },
+  "save": {
+    "message": "节省"
+  },
+  "cancel": {
+    "message": "取消"
+  },
+  "edit": {
+    "message": "编辑"
+  },
+  "delete": {
+    "message": "删除"
+  },
+  "blackListDomain": {
+    "message": "域名黑名單"
+  }
+}

@@ -10,3 +10,4 @@ capsolver
 pytest
 pytest-mock
 pytest-cov
+undetected-chromedriver

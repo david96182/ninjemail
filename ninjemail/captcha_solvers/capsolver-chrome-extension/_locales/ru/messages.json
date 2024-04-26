@@ -1,0 +1,168 @@
+{
+  "extName": {
+    "message": "Captcha Solver: Обход и Авто Ввод Капчи"
+  },
+  "extDescription": {
+    "message": "Этот плагин помогает решать капчи на страницах сайтов."
+  },
+  "extShortName": {
+    "message": "Captcha Solver"
+  },
+  "optionsPageTitle": {
+    "message": "Настройки расширения Capsolver"
+  },
+  "accountSettings": {
+    "message": "Настройки аккаунта:"
+  },
+  "apiKey": {
+    "message": "API-ключ:"
+  },
+  "connect": {
+    "message": "Подключить"
+  },
+  "doNotHaveApiKey": {
+    "message": "Нет API-ключа?"
+  },
+  "createAccountToGetIt": {
+    "message": "<a href=\"#\" data-lang-link=\"$link$\" target=\"_blank\">Создайте аккаунт</a> чтобы его получить.",
+    "placeholders": {
+      "link": {
+        "content": "$1"
+      }
+    }
+  },
+  "generalSettings": {
+    "message": "Общие настройки:"
+  },
+  "enablePlugin": {
+    "message": "Включить плагин"
+  },
+  "submitFormsAutomatically": {
+    "message": "Отправлять формы автоматически"
+  },
+  "settingsLink": {
+    "message": "Настройки"
+  },
+  "manualLink": {
+    "message": "Документация"
+  },
+  "enabledSolveAutomatically": {
+    "message": "Включено / Решать автоматически"
+  },
+  "minScore": {
+    "message": "мин. score:"
+  },
+  "haveAnyQuestions": {
+    "message": "Есть вопросы/предложения?"
+  },
+  "contactUs": {
+    "message": "Дайте нам знать: <a href=\"mailto:$email$\">$email$</a>",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "balance": {
+    "message": "Баланс"
+  },
+  "login": {
+    "message": "Войти"
+  },
+  "logout": {
+    "message": "Выход"
+  },
+  "accountSuccessfullyConnected": {
+    "message": "Аккаунт успешно подключен!"
+  },
+  "solveWithCapsolver": {
+    "message": "Решить с Capsolver"
+  },
+  "solving": {
+    "message": "Решается..."
+  },
+  "solved": {
+    "message": "Капча решена!"
+  },
+  "delay": {
+    "message": "Задержка"
+  },
+  "seconds": {
+    "message": "секунд"
+  },
+  "ifErrorRepeat": {
+    "message": "В случае ошибки, повторить"
+  },
+  "times": {
+    "message": "раз"
+  },
+  "proxySettings": {
+    "message": "Настройки прокси"
+  },
+  "useProxy": {
+    "message": "Использовать прокси"
+  },
+  "proxyType": {
+    "message": "Тип прокси"
+  },
+  "images": {
+    "message": "Изображения"
+  },
+  "markAsCaptchaSource": {
+    "message": "Решать эту капчу"
+  },
+  "putCaptchaAnswerHere": {
+    "message": "Вставить ответ на капчу сюда"
+  },
+  "normalManual": {
+    "message": "Расположение изображения с капчей сохранено. Теперь укажите поле, куда вставить ответ."
+  },
+  "autoSubmitRules": {
+    "message": "Правила автоотправки форм"
+  },
+  "autoSubmitDescription": {
+    "message": "По умолчанию, функция \"Автоотправка\", после получения ответа, сабмитит форму, в которой находиться капча. Если после успешного решения капчи нужно сделать что-то другое, например нажать какую-то кнопку, укажите это здесь:"
+  },
+  "autoSubmitNoRules": {
+    "message": "Еще не добавлено ни одного правила..."
+  },
+  "autoSubmitCreateNewRule": {
+    "message": "Создать новое правило"
+  },
+  "autoSubmitAlertFormOpened": {
+    "message": "Please save or cancel previously opened form first!"
+  },
+  "autoSubmitAlertUrlRequired": {
+    "message": "URL шаблон не заполнен!"
+  },
+  "autoSubmitAlertUrlInvalid": {
+    "message": "URL шаблон должен быть валидным regexp!"
+  },
+  "autoSubmitAlertCodeRequired": {
+    "message": "Код не заполнен!"
+  },
+  "autoSubmitConfirmDelete": {
+    "message": "Удалить правило"
+  },
+  "autoSubmitPlaceholderUrl": {
+    "message": "URL шаблон (regexp), например:"
+  },
+  "autoSubmitPlaceholderCode": {
+    "message": "Последовательность действий для выполнения, например:"
+  },
+  "save": {
+    "message": "Сохранить"
+  },
+  "cancel": {
+    "message": "Отменить"
+  },
+  "edit": {
+    "message": "Изменить"
+  },
+  "delete": {
+    "message": "Удалить"
+  },
+  "blackListDomain": {
+    "message": "Черный список доменов"
+  }
+}

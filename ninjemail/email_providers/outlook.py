@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
+import undetected_chromedriver as uc
 
 URL = 'https://signup.live.com/signup'
 WAIT = 25
@@ -57,7 +58,7 @@ def create_account(captcha_key,
         api_key_input.send_keys(captcha_key)
         driver.find_element(By.ID, 'q-app').click()
         time.sleep(5)
-    elif type(driver) is webdriver.Chrome:
+    elif type(driver) is webdriver.Chrome or type(driver) is uc.Chrome:
         driver.get('https://www.google.com')
         capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
         capsolver_src = capsolver_src.get_attribute('src')

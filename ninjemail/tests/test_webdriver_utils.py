@@ -1,5 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox, Chrome
+import undetected_chromedriver as uc
 from ..utils.webdriver_utils import create_driver
 
 @pytest.fixture(autouse=True)
@@ -34,8 +35,10 @@ def mock_driver_manager_installations(monkeypatch):
     monkeypatch.setattr('selenium.webdriver.chrome.service.Service.__init__', mock_chrome_service)
     monkeypatch.setattr('selenium.webdriver.Firefox.__init__', mock_firefox)
     monkeypatch.setattr('selenium.webdriver.Chrome.__init__', mock_chrome)
+    monkeypatch.setattr('undetected_chromedriver.Chrome.__init__', mock_chrome)
     monkeypatch.setattr('selenium.webdriver.Firefox.quit', mock_firefox_quit)
     monkeypatch.setattr('selenium.webdriver.Chrome.quit', mock_chrome_quit)
+    monkeypatch.setattr('undetected_chromedriver.Chrome.quit', mock_chrome_quit)
 
 
 def test_create_firefox_driver_no_proxy_no_captcha():
@@ -47,6 +50,16 @@ def test_create_firefox_driver_no_proxy_no_captcha():
 def test_create_chrome_driver_no_proxy_no_captcha():
     driver = create_driver('chrome')
     assert isinstance(driver, Chrome)
+    driver.quit()
+
+def test_create_undetected_chrome_driver():
+    driver = create_driver('undetected-chrome')
+    assert isinstance(driver, uc.Chrome)
+    driver.quit()
+
+def test_create_undetected_chrome_driver_with_proxy_and_captcha():
+    driver = create_driver('undetected-chrome', captcha_extension=True, proxy='http://10.10.10.1:2020')
+    assert isinstance(driver, uc.Chrome)
     driver.quit()
 
 

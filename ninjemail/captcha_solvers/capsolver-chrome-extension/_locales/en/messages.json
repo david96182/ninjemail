@@ -1,0 +1,168 @@
+{
+  "extName": {
+    "message": "Captcha Solver: Auto Recognition and Bypass"
+  },
+  "extDescription": {
+    "message": "Capsolver Solver plugin allows you to automatically solve CAPTCHAs found on any webpage."
+  },
+  "extShortName": {
+    "message": "Captcha solver"
+  },
+  "optionsPageTitle": {
+    "message": "Capsolver Extension Settings"
+  },
+  "accountSettings": {
+    "message": "Account Settings:"
+  },
+  "apiKey": {
+    "message": "API-KEY:"
+  },
+  "connect": {
+    "message": "Connect"
+  },
+  "doNotHaveApiKey": {
+    "message": "Do not have API-KEY?"
+  },
+  "createAccountToGetIt": {
+    "message": "<a href=\"#\" data-lang-link=\"$link$\" target=\"_blank\">Create account</a> to get it.",
+    "placeholders": {
+      "link": {
+        "content": "$1"
+      }
+    }
+  },
+  "generalSettings": {
+    "message": "General settings:"
+  },
+  "enablePlugin": {
+    "message": "Enable plugin"
+  },
+  "submitFormsAutomatically": {
+    "message": "Submit forms automatically"
+  },
+  "settingsLink": {
+    "message": "Settings"
+  },
+  "manualLink": {
+    "message": "Manual"
+  },
+  "enabledSolveAutomatically": {
+    "message": "Enabled / Solve automatically"
+  },
+  "minScore": {
+    "message": "min. score:"
+  },
+  "haveAnyQuestions": {
+    "message": "Have any questions/suggestions?"
+  },
+  "contactUs": {
+    "message": "Contact us: <a href=\"mailto:$email$\">$email$</a>",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "balance": {
+    "message": "Balance"
+  },
+  "login": {
+    "message": "Login"
+  },
+  "logout": {
+    "message": "Logout"
+  },
+  "accountSuccessfullyConnected": {
+    "message": "Account successfully connected!"
+  },
+  "solveWithCapsolver": {
+    "message": "Solve with Capsolver"
+  },
+  "solving": {
+    "message": "Solving..."
+  },
+  "solved": {
+    "message": "Captcha solved!"
+  },
+  "delay": {
+    "message": "Delay"
+  },
+  "seconds": {
+    "message": "seconds"
+  },
+  "ifErrorRepeat": {
+    "message": "If error happens, repeat"
+  },
+  "times": {
+    "message": "times"
+  },
+  "proxySettings": {
+    "message": "Proxy settings"
+  },
+  "useProxy": {
+    "message": "Use proxy"
+  },
+  "proxyType": {
+    "message": "Proxy type"
+  },
+  "images": {
+    "message": "Images"
+  },
+  "markAsCaptchaSource": {
+    "message": "Mark as captcha source"
+  },
+  "putCaptchaAnswerHere": {
+    "message": "Put captcha answer here"
+  },
+  "normalManual": {
+    "message": "Location of image with captcha is saved. Now, please choose where to put answer."
+  },
+  "autoSubmitRules": {
+    "message": "AutoSubmit rules"
+  },
+  "autoSubmitDescription": {
+    "message": "By default, \"AutoSubmit\" feature submits form which contains captcha answer field. If something else must be done after captcha is solved, for example some button must be clicked, please define it here:"
+  },
+  "autoSubmitNoRules": {
+    "message": "No rules added yet..."
+  },
+  "autoSubmitCreateNewRule": {
+    "message": "Create new rule"
+  },
+  "autoSubmitAlertFormOpened": {
+    "message": "Please save or cancel previously opened form first!"
+  },
+  "autoSubmitAlertUrlRequired": {
+    "message": "URL pattern is required!"
+  },
+  "autoSubmitAlertUrlInvalid": {
+    "message": "URL pattern must be valid regular expression!"
+  },
+  "autoSubmitAlertCodeRequired": {
+    "message": "Code is required!"
+  },
+  "autoSubmitConfirmDelete": {
+    "message": "Delete rule"
+  },
+  "autoSubmitPlaceholderUrl": {
+    "message": "URL pattern (regexp), for example:"
+  },
+  "autoSubmitPlaceholderCode": {
+    "message": "Sequence of actions to execute, for example:"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "edit": {
+    "message": "Edit"
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "blackListDomain": {
+    "message": "Domain blacklist"
+  }
+}

@@ -1,0 +1,114 @@
+/* Global CSS used within your BEX. This is not preprocessed so this has to be pure CSS. */
+.capsolver-solver {
+  display: flex;
+  box-sizing: border-box;
+  max-width: 304px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 2px solid #06201B;
+  border-radius: 8px;
+  background-color: #fff;
+  /*background-color: #9ceedd;*/
+  transition: all 0.2s linear;
+}
+
+.capsolver-solver:hover {
+  box-shadow: 4px 4px 0 #000000;
+  cursor: pointer;
+}
+
+.capsolver-solver[data-state=solved],
+.capsolver-solver[data-state=solving],
+.capsolver-solver[data-state=ready] {
+  /*background: linear-gradient(0deg, #232323 0%, #4b4b4b 100%);*/
+  background-color: #cce8e1;
+  cursor: not-allowed;
+  color: #91be88;
+}
+
+.capsolver-solver[data-state=ready] {
+  cursor: pointer;
+}
+
+.capsolver-solver[data-state=error] {
+  background-color: #BA1A1A;
+  color: #fff;
+}
+
+.capsolver-solver[data-state=error]:hover {
+  background-color: #f6c0c0;
+  color: #BA1A1A;
+}
+
+.capsolver-solver-image {
+  width: 38px;
+  flex: 0 0 38px;
+  /*border-right: 1px solid #00bcbd !important;*/
+}
+
+.capsolver-solver-image img {
+  display: block;
+  margin: 8px auto !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.capsolver-solver[data-state=solved] .capsolver-solver-image,
+.capsolver-solver[data-state=solving] .capsolver-solver-image,
+.capsolver-solver[data-state=ready] .capsolver-solver-image {
+  background-color: #191C1B;
+}
+
+.capsolver-solver[data-state=error] .capsolver-solver-image {
+  background-color: #191C1B;
+}
+
+@keyframes blink {
+  50% {
+    opacity: .2;
+  }
+}
+
+.capsolver-solver-info {
+  padding: 6px 8px !important;
+  word-break: break-word;
+  font-family: sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  color: inherit;
+}
+
+.capsolver-solver[data-state=solved] .capsolver-solver-info,
+.capsolver-solver[data-state=solving] .capsolver-solver-info,
+.capsolver-solver[data-state=ready] .capsolver-solver-info {
+  color: #000000;
+}
+
+.grecaptcha-badge .capsolver-solver {
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.capsolver-solver-hcaptcha {
+  margin: 0 auto;
+}
+
+.capsolver-solver-hcaptcha-helper {
+  display: none !important;
+}
+
+.capsolver-solver-geetest {
+  margin: 5px auto 0 auto;
+}
+
+.capsolver-solver-keycaptcha {
+  margin: 5px auto 0 auto;
+  width: 300px;
+}
+
+.capsolver-solver-keycaptcha-working {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

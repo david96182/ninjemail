@@ -1,0 +1,168 @@
+{
+  "extName": {
+    "message": "Captcha Solver: Auto Evitar"
+  },
+  "extDescription": {
+    "message": "La extensión para resolver automáticalmente los CAPTCHAs en cualqer página web."
+  },
+  "extShortName": {
+    "message": "Captcha Solver"
+  },
+  "optionsPageTitle": {
+    "message": "Ajustes de Capsolver Extensión"
+  },
+  "accountSettings": {
+    "message": "Ajustes de la cuenta"
+  },
+  "apiKey": {
+    "message": "API-KEY:"
+  },
+  "connect": {
+    "message": "Conectar"
+  },
+  "doNotHaveApiKey": {
+    "message": "¿No tiene API-KEY?"
+  },
+  "createAccountToGetIt": {
+    "message": "<a href=\"#\" data-lang-link=\"$link$\" target=\"_blank\">Crea una cuenta </a> para obtenerlo.",
+    "placeholders": {
+      "link": {
+        "content": "$1"
+      }
+    }
+  },
+  "generalSettings": {
+    "message": "Ajustes generales:"
+  },
+  "enablePlugin": {
+    "message": "Habilitar extensión"
+  },
+  "submitFormsAutomatically": {
+    "message": "Enviar formularios automáticalmente"
+  },
+  "settingsLink": {
+    "message": "Ajustes"
+  },
+  "manualLink": {
+    "message": "Manual"
+  },
+  "enabledSolveAutomatically": {
+    "message": "Activado / Resolver automáticalmente"
+  },
+  "minScore": {
+    "message": "min. score:"
+  },
+  "haveAnyQuestions": {
+    "message": "¿Tiene preguntas o sugerencias?"
+  },
+  "contactUs": {
+    "message": "Contactenos: <a href=\"mailto:$email$\">$email$</a>",
+    "placeholders": {
+      "email": {
+        "content": "$1"
+      }
+    }
+  },
+  "balance": {
+    "message": "Saldo"
+  },
+  "login": {
+    "message": "Iniciar sesión"
+  },
+  "logout": {
+    "message": "Cerrar sesión"
+  },
+  "accountSuccessfullyConnected": {
+    "message": "¡La cuenta conectada con éxito!"
+  },
+  "solveWithCapsolver": {
+    "message": "Resolver con Capsolver"
+  },
+  "solving": {
+    "message": "Resolviendo..."
+  },
+  "solved": {
+    "message": "Captcha está resuelta!"
+  },
+  "delay": {
+    "message": "Retraso"
+  },
+  "seconds": {
+    "message": "segundos"
+  },
+  "ifErrorRepeat": {
+    "message": "En caso de error, repetir"
+  },
+  "times": {
+    "message": "veces"
+  },
+  "proxySettings": {
+    "message": "Ajustes de proxy"
+  },
+  "useProxy": {
+    "message": "Usar proxy"
+  },
+  "proxyType": {
+    "message": "Tipo de proxy"
+  },
+  "images": {
+    "message": "Imagenes"
+  },
+  "markAsCaptchaSource": {
+    "message": "Marcar como fuente de captcha"
+  },
+  "putCaptchaAnswerHere": {
+    "message": "Pon la respuesta de captcha aquí"
+  },
+  "normalManual": {
+    "message": "La ubicación de la imagen de captcha fue guardado. Ahora, elija dónde poner la respuesta."
+  },
+  "autoSubmitRules": {
+    "message": "Reglas de envío automático"
+  },
+  "autoSubmitDescription": {
+    "message": "De forma predeterminada, la función \"AutoSubmit\" envía un formulario que contiene un campo de respuesta captcha. Si se debe hacer algo más después de resolver el captcha, por ejemplo, se debe hacer clic en algún botón, defínalo aquí:"
+  },
+  "autoSubmitNoRules": {
+    "message": "Aún no se agregaron reglas..."
+  },
+  "autoSubmitCreateNewRule": {
+    "message": "Crear nueva regla"
+  },
+  "autoSubmitAlertFormOpened": {
+    "message": "¡Guarde o cancele primero el formulario abierto anteriormente!"
+  },
+  "autoSubmitAlertUrlRequired": {
+    "message": "¡Se requiere un patrón de URL!"
+  },
+  "autoSubmitAlertUrlInvalid": {
+    "message": "El patrón de URL debe ser una expresión regular válida."
+  },
+  "autoSubmitAlertCodeRequired": {
+    "message": "¡Se requiere código!"
+  },
+  "autoSubmitConfirmDelete": {
+    "message": "Eliminar regla"
+  },
+  "autoSubmitPlaceholderUrl": {
+    "message": "Patrón de URL (regex), por ejemplo:"
+  },
+  "autoSubmitPlaceholderCode": {
+    "message": "Secuencia de acciones a ejecutar, por ejemplo:"
+  },
+  "save": {
+    "message": "Ahorrar"
+  },
+  "cancel": {
+    "message": "Cancelar"
+  },
+  "edit": {
+    "message": "Editar"
+  },
+  "delete": {
+    "message": "Borrar"
+  },
+  "blackListDomain": {
+    "message": "Lista negra de dominio"
+  }
+}

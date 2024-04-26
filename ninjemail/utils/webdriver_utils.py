@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+import undetected_chromedriver as uc
 import os
 from urllib.parse import urlparse
 
@@ -74,6 +75,19 @@ def create_driver(browser, captcha_extension=False, proxy=None):
             options.add_extension(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.crx'))
 
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+    elif browser == 'undetected-chrome':
+        options = uc.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-gpu')
+        options.add_experimental_option('prefs', {'intl.accept_languages': 'en-us'})
+
+        if proxy:
+            options.add_argument(f'--proxy-server={proxy}')
+        if captcha_extension:
+            ext_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver-chrome-extension/')
+            options.add_argument(f'--load-extension={ext_path}')
+
+        driver = uc.Chrome(options=options, headless=True, use_subprocess=False) 
     else:
         raise ValueError('Unsupported browser')
     return driver

@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 from sms_services import getsmscode, smspool
+import undetected_chromedriver as uc
 
 URL = 'https://login.yahoo.com/account/create'
 WAIT = 25
@@ -72,7 +73,7 @@ def create_account(captcha_key,
         #token_recaptcha = driver.find_element(By.XPATH, '/html/body/div/div/div/main/div[2]/div[2]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/span')
         #token_recaptcha.click()
         time.sleep(5)
-    elif type(driver) is webdriver.Chrome:
+    elif type(driver) is webdriver.Chrome or type(driver) is uc.Chrome:
         driver.get('https://www.google.com')
         capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
         capsolver_src = capsolver_src.get_attribute('src')

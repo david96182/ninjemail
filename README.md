@@ -108,7 +108,7 @@ ninja = Ninjemail(
 )
 ```
 
-The `browser` parameter specifies the browser to be used for automation. The default value is "firefox". Currently, **Firefox and Chrome are supported**.
+The `browser` parameter specifies the browser to be used for automation. The default value is "firefox". Currently, Ninjemail supports **Firefox, Chrome and Undetected Chrome**. The acceptable values for the browser parameter are `firefox`, `chrome` and `undetected-chrome` respectively.
 
 The `captcha_keys` parameter is a dictionary that contains the **API keys for supported captcha solving services**, based on `config.toml`. The default value is an empty dictionary. You can provide API keys for specific captcha solving services if required. Currently, **"capsolver"** is supported.
 
@@ -200,13 +200,14 @@ Ninjemail logs its activities to a file named `ninjemail.log` in the `logs` dire
 
 ## Example
 
-Here's an example that shows how to use Ninjemail to create an Outlook account:
+Here's an example that shows how to use Ninjemail to create an Outlook account with `undetected-chrome`:
 
 ```python
 from ninjemail import Ninjemail
 
 # Replace "YOUR_API_KEY", "USERNAME" and "TOKEN" with your actual keys
 ninja = Ninjemail(
+    		browser="undetected-chrome",
     		captcha_keys={"capsolver": "YOUR_API_KEY"},
     		sms_keys={"getsmscode": {"user": "USERNAME", "token": "TOKEN"}},
 			auto_proxy=True)

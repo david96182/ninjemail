@@ -14,6 +14,10 @@ def test_init_valid_browser():
   manager = Ninjemail()
   assert manager.browser == "firefox"
 
+def test_init_valid_browser_undetected_chrome():
+  """Tests Ninjemail initialization with a valid browser."""
+  manager = Ninjemail(browser="undetected-chrome")
+  assert manager.browser == "undetected-chrome"
 
 def test_init_invalid_browser():
   """Tests Ninjemail initialization with an invalid browser."""
