@@ -11,11 +11,13 @@ from sms_services import getsmscode, smspool, fivesim
 URL = 'https://accounts.google.com/signup'
 WAIT = 5
 NEXT_BUTTON_XPATH = [
+        "//span[contains(text(), 'Next')]",
+        "//span[contains(text(),'I agree')]",
+        "//div[contains(text(),'I agree')]"
         "//button[@class='VfPpkd-LgbsSe VfPpkd-LgbsSe-OWXEXe-k8QpJ VfPpkd-LgbsSe-OWXEXe-dgl2Hf nCP5yc AjY5Oe DuMIQc LQeN7 qIypjc TrZEUc lw1w4b']",
         "//button[contains(text(),'Next')]",
         "//button[contains(text(),'I agree')]",
-        "//span[contains(text(), 'Next')]",
-        "//div[@class='VfPpkd-RLmnJb']"
+        "//div[@class='VfPpkd-RLmnJb']",
         ]
 
 def next_button(driver):
@@ -141,6 +143,19 @@ def create_account(driver,
         logging.error('Failed to enter phone number: %s', str(e))
         raise 
 
+    value = None
+    try:
+        # check if number was accepted by Google
+        wait = WebDriverWait(driver, 10)
+        element = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[1]/div[2]/div/div/div[2]/div/div/div[1]/form/span/section/div/div/div[2]/div/div[2]/div[2]/div')))
+        value = element.text
+        if value and isinstance(element, WebElement):
+            logging.error(f"Phone number was rejected, error: {value}")
+            driver.quit()
+            return None, None
+    except:
+        pass
+
     # sms verification
     try:
         if SMS_SERVICE == 'getsmscode':
@@ -156,11 +171,14 @@ def create_account(driver,
     driver.find_elements(By.TAG_NAME, "button")[-1].click()
     # phone recovery (skip)
     next_button(driver)
+    time.sleep(5)
 
     # final step
     next_button(driver)
+    time.sleep(5)
     next_button(driver)
-    time.sleep(8)
+    time.sleep(5)
+    next_button(driver)
 
     # log and return results
     logging.info("Verification complete.")
