@@ -328,7 +328,19 @@ Join the Ninjemail community to connect with other users, ask questions, and get
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+If you find this project helpful and would like to show your support, here are a couple of things you can do:
+
+- **Star the Project**: If you find the project useful, consider giving it a star. It helps to raise awareness of the project and encourages further development.
+
+- **Financial Support**: Sustaining this project entails ongoing costs for essential services. If you find value in its offerings and wish to bolster its development and upkeep, your financial contribution is invaluable. You can support the project's progression through the [Support-My-Work page](https://david96182.github.io/support-my-work/).
+
+  This project relies on various paid services that furnish APIs. To utilize the project, each user must employ their own API keys. As the project's steward, I'm tasked with maintaining sufficient balances across these services for ongoing development and enhancement. Your support is pivotal in this endeavor.
+
+Your support is greatly appreciated and helps to ensure the continued improvement and availability of this project. 
 
 ## Disclaimer
 
