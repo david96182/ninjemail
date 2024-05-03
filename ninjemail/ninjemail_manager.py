@@ -174,7 +174,7 @@ class Ninjemail():
         if use_proxy:
             proxy = self.get_proxy()
 
-        driver = create_driver(self.browser, captcha_extension=True, proxy=proxy)
+        driver = create_driver(self.browser, captcha_extension=True, proxy=proxy, captcha_key=captcha_key)
 
         username, password, first_name, last_name, \
             country, birthdate = generate_missing_info(username, password, first_name, last_name, country, birthdate)
@@ -265,7 +265,7 @@ class Ninjemail():
         if use_proxy:
             proxy = self.get_proxy()
 
-        driver = create_driver(self.browser, captcha_extension=True, proxy=proxy)
+        driver = create_driver(self.browser, captcha_extension=True, proxy=proxy, captcha_key=captcha_key)
 
         sms_key = self.get_sms_key()
 

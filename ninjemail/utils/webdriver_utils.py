@@ -9,9 +9,19 @@ from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 import undetected_chromedriver as uc
 import os
 from urllib.parse import urlparse
+import os
+import re
 
+def add_capsolver_api_key(file_path, api_key):
+    with open(file_path, 'r') as file:
+        content = file.read()
 
-def create_driver(browser, captcha_extension=False, proxy=None):
+    updated_content = re.sub(r'apiKey:\s*\'[^\']*\'', f'apiKey: \'{api_key}\'', content)
+
+    with open(file_path, 'w') as file:
+        file.write(updated_content)
+
+def create_driver(browser, captcha_extension=False, proxy=None, captcha_key=None):
     """
     Create a WebDriver instance for the specified browser with optional configurations.
 
@@ -72,7 +82,9 @@ def create_driver(browser, captcha_extension=False, proxy=None):
         if proxy:
             options.add_argument(f'--proxy-server={proxy}')
         if captcha_extension:
-            options.add_extension(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.crx'))
+            add_capsolver_api_key(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver-chrome-extension/assets/config.js'), captcha_key)
+            ext_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver-chrome-extension/')
+            options.add_argument(f'--load-extension={ext_path}')
 
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     elif browser == 'undetected-chrome':
@@ -84,6 +96,7 @@ def create_driver(browser, captcha_extension=False, proxy=None):
         if proxy:
             options.add_argument(f'--proxy-server={proxy}')
         if captcha_extension:
+            add_capsolver_api_key(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver-chrome-extension/assets/config.js'), captcha_key)
             ext_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver-chrome-extension/')
             options.add_argument(f'--load-extension={ext_path}')
 

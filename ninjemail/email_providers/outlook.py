@@ -58,18 +58,6 @@ def create_account(captcha_key,
         api_key_input.send_keys(captcha_key)
         driver.find_element(By.ID, 'q-app').click()
         time.sleep(5)
-    elif type(driver) is webdriver.Chrome or type(driver) is uc.Chrome:
-        driver.get('https://www.google.com')
-        capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
-        capsolver_src = capsolver_src.get_attribute('src')
-        capsolver_ext_id = capsolver_src.split('/')[2]
-        driver.get(f'chrome-extension://{capsolver_ext_id}/www/index.html#/popup')
-        time.sleep(5)
-        
-        api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
-        api_key_input.send_keys(captcha_key)
-        driver.find_element(By.ID, 'q-app').click()
-        time.sleep(5)
 
     driver.get(URL)
 
@@ -92,9 +80,13 @@ def create_account(captcha_key,
     driver.implicitly_wait(2)
 
     # Insert password and dismark notifications
-    show_password_checkbox = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'ShowHidePasswordCheckbox')))
-    show_password_checkbox.click()
-    driver.find_element(By.ID, 'iOptinEmail').click()
+    try:
+        show_password_checkbox = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'ShowHidePasswordCheckbox')))
+        show_password_checkbox.click()
+        time.sleep(3)
+        driver.find_element(By.ID, 'iOptinEmail').click()
+    except:
+        pass
     driver.find_element(By.ID, 'PasswordInput').send_keys(password)
     password_next = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'iSignupAction')))
     password_next.click()
