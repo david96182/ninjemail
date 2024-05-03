@@ -73,7 +73,6 @@ def test_create_account_firefox():
 
     driver = create_driver('firefox')
     # Test data
-    captcha_key= "4564654777"
     username = "testuser"
     password = "testpassword"
     first_name = "John"
@@ -84,7 +83,7 @@ def test_create_account_firefox():
     year = "2000"
     hotmail = False
 
-    email, password = create_account(captcha_key, driver, username, password, first_name, last_name, country, month, day, year, hotmail)
+    email, password = create_account(driver, username, password, first_name, last_name, country, month, day, year, hotmail)
     assert email == f"{username}@outlook.com"
     assert password == "testpassword"
 
@@ -92,7 +91,6 @@ def test_create_account_chrome():
 
     driver = create_driver('chrome')
     # Test data
-    captcha_key="5456646656"
     username = "testuser"
     password = "testpassword"
     first_name = "John"
@@ -103,7 +101,7 @@ def test_create_account_chrome():
     year = "2000"
     hotmail = False
 
-    email, password = create_account(captcha_key, driver, username, password, first_name, last_name, country, month, day, year, hotmail)
+    email, password = create_account(driver, username, password, first_name, last_name, country, month, day, year, hotmail)
     assert email == f"{username}@outlook.com"
     assert password == "testpassword"
 
@@ -112,7 +110,6 @@ def test_create_hotmail_account():
     driver = create_driver('chrome')
     # Test data
     
-    captcha_key="5456646656"
     username = "testuser"
     password = "testpassword"
     first_name = "John"
@@ -123,7 +120,7 @@ def test_create_hotmail_account():
     year = "2000"
     hotmail = True
 
-    email, password = create_account(captcha_key, driver, username, password, first_name, last_name, country, month, day, year, hotmail)
+    email, password = create_account(driver, username, password, first_name, last_name, country, month, day, year, hotmail)
     assert email == f"{username}@hotmail.com"
     assert password == "testpassword"
 

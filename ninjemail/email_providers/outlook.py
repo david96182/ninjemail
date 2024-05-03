@@ -1,19 +1,15 @@
 import logging
-import os
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.remote.webelement import WebElement
-from selenium import webdriver
-import undetected_chromedriver as uc
 
 URL = 'https://signup.live.com/signup'
 WAIT = 25
 
-def create_account(captcha_key,
-                   driver, 
+def create_account(driver, 
                    username, 
                    password, 
                    first_name, 
@@ -27,7 +23,6 @@ def create_account(captcha_key,
     Automatically creates an outlook/hotmail account.
 
     Args:
-        captcha_key (str): The API key for Death By Captcha service in the format "username:password".
         driver (WebDriver): The Selenium WebDriver instance for the configured browser.
         username (str): The desired username for the email account.
         password (str): The desired password for the email account.
@@ -44,20 +39,6 @@ def create_account(captcha_key,
 
     """
     logging.info('Creating outlook account')
-
-    if type(driver) is webdriver.Firefox:
-        driver.install_addon(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.xpi'))
-        driver.get('https://www.google.com')
-        capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
-        capsolver_src = capsolver_src.get_attribute('src')
-        capsolver_ext_id = capsolver_src.split('/')[2]
-        driver.get(f'moz-extension://{capsolver_ext_id}/www/index.html#/popup')
-        time.sleep(5)
-        
-        api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
-        api_key_input.send_keys(captcha_key)
-        driver.find_element(By.ID, 'q-app').click()
-        time.sleep(5)
 
     driver.get(URL)
 

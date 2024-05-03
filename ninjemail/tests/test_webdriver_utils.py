@@ -1,3 +1,4 @@
+from unittest.mock import MagicMock
 import pytest
 from selenium.webdriver import Firefox, Chrome
 import undetected_chromedriver as uc
@@ -28,6 +29,9 @@ def mock_driver_manager_installations(monkeypatch):
 
     def mock_chrome_quit(self):
         pass
+    
+    def mock_firefox_addon(*args, **kwargs):
+        pass
 
     monkeypatch.setattr('webdriver_manager.firefox.GeckoDriverManager.install', mock_gecko_install)
     monkeypatch.setattr('webdriver_manager.chrome.ChromeDriverManager.install', mock_chrome_install)
@@ -37,8 +41,13 @@ def mock_driver_manager_installations(monkeypatch):
     monkeypatch.setattr('selenium.webdriver.Chrome.__init__', mock_chrome)
     monkeypatch.setattr('undetected_chromedriver.Chrome.__init__', mock_chrome)
     monkeypatch.setattr('selenium.webdriver.Firefox.quit', mock_firefox_quit)
+    monkeypatch.setattr('selenium.webdriver.Firefox.install_addon', mock_firefox_addon)
+    monkeypatch.setattr('selenium.webdriver.Firefox.get', MagicMock())
+    monkeypatch.setattr('selenium.webdriver.Firefox.find_element', MagicMock())
     monkeypatch.setattr('selenium.webdriver.Chrome.quit', mock_chrome_quit)
     monkeypatch.setattr('undetected_chromedriver.Chrome.quit', mock_chrome_quit)
+
+    monkeypatch.setattr('time.sleep', MagicMock(()))
 
 
 def test_create_firefox_driver_no_proxy_no_captcha():
@@ -58,7 +67,7 @@ def test_create_undetected_chrome_driver():
     driver.quit()
 
 def test_create_undetected_chrome_driver_with_proxy_and_captcha():
-    driver = create_driver('undetected-chrome', captcha_extension=True, proxy='http://10.10.10.1:2020')
+    driver = create_driver('undetected-chrome', captcha_extension=True, proxy='http://10.10.10.1:2020', captcha_key='test_key')
     assert isinstance(driver, uc.Chrome)
     driver.quit()
 
@@ -79,10 +88,14 @@ def test_create_chrome_driver_with_proxy():
     assert isinstance(driver, Chrome)
     driver.quit()
 
+def test_create_chrome_driver_with_proxy_and_captcha():
+    driver = create_driver('chrome', captcha_extension=True, proxy='http://10.10.10.1:2020', captcha_key='test_key')
+    assert isinstance(driver, Chrome)
+    driver.quit()
 
 def test_create_firefox_driver_with_captcha_extension():
 
-    driver = create_driver('firefox', captcha_extension=True)
+    driver = create_driver('firefox', captcha_extension=True, captcha_key='test_key')
     assert isinstance(driver, Firefox)
     driver.quit()
 

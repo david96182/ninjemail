@@ -1,20 +1,16 @@
 import logging
-import os
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
 from sms_services import getsmscode, smspool, fivesim
-import undetected_chromedriver as uc
 
 URL = 'https://login.yahoo.com/account/create'
 WAIT = 25
 
-def create_account(captcha_key,
-                   driver, 
+def create_account(driver, 
                    sms_key,
                    username, 
                    password, 
@@ -28,7 +24,6 @@ def create_account(captcha_key,
     Automatically creates a Yahoo  account.
 
     Args:
-        captcha_key (str): The API key for the captcha solving service.
         driver (WebDriver): The Selenium WebDriver instance for the configured browser.
         sms_key(dict): The data of the SMS service.
         username (str): The desired username for the email account.
@@ -59,24 +54,6 @@ def create_account(captcha_key,
         data = sms_key['data']
         data.update({'service': 'yahoo'})
         sms_provider = fivesim.FiveSim(**data)
-
-    if type(driver) is webdriver.Firefox:
-        driver.install_addon(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.xpi'))
-        driver.get('https://www.google.com')
-        capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
-        capsolver_src = capsolver_src.get_attribute('src')
-        capsolver_ext_id = capsolver_src.split('/')[2]
-        driver.get(f'moz-extension://{capsolver_ext_id}/www/index.html#/popup')
-        time.sleep(5)
-        
-        api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
-        api_key_input.send_keys(captcha_key)
-        driver.find_element(By.ID, 'q-app').click()
-        
-        # solve recaptcha by token
-        #token_recaptcha = driver.find_element(By.XPATH, '/html/body/div/div/div/main/div[2]/div[2]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/span')
-        #token_recaptcha.click()
-        time.sleep(5)
 
     logging.info('Creating Yahoo account')
 

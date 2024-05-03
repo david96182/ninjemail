@@ -180,8 +180,7 @@ class Ninjemail():
             country, birthdate = generate_missing_info(username, password, first_name, last_name, country, birthdate)
         month, day, year = get_birthdate(birthdate)
 
-        return outlook.create_account(captcha_key,
-                                      driver, 
+        return outlook.create_account(driver, 
                                       username, 
                                       password, 
                                       first_name, 
@@ -273,8 +272,7 @@ class Ninjemail():
             _, birthdate = generate_missing_info(username, password, first_name, last_name, '', birthdate)
         month, day, year = get_birthdate(birthdate)
 
-        return yahoo.create_account(captcha_key,
-                                    driver, 
+        return yahoo.create_account(driver, 
                                     sms_key,
                                     username, 
                                     password, 

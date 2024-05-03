@@ -6,11 +6,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+from selenium.webdriver.common.by import By
 import undetected_chromedriver as uc
 import os
 from urllib.parse import urlparse
 import os
 import re
+import time
 
 def add_capsolver_api_key(file_path, api_key):
     with open(file_path, 'r') as file:
@@ -72,6 +74,20 @@ def create_driver(browser, captcha_extension=False, proxy=None, captcha_key=None
         options.profile = custom_profile
 
         driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+
+        if captcha_extension:
+            driver.install_addon(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver_captcha_solver-1.10.4.xpi'))
+            driver.get('https://www.google.com')
+            capsolver_src = driver.find_element(By.XPATH, '/html/script[2]')
+            capsolver_src = capsolver_src.get_attribute('src')
+            capsolver_ext_id = capsolver_src.split('/')[2]
+            driver.get(f'moz-extension://{capsolver_ext_id}/www/index.html#/popup')
+            time.sleep(5)
+            
+            api_key_input = driver.find_element(By.XPATH, '//input[@placeholder="Please input your API key"]')
+            api_key_input.send_keys(captcha_key)
+            driver.find_element(By.ID, 'q-app').click()
+
     elif browser == 'chrome':
         options = ChromeOptions()
         options.add_argument('--no-sandbox')

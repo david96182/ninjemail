@@ -142,7 +142,7 @@ def mock_create_account_methods(monkeypatch):
 
 def test_create_outlook_account():
 
-    manager = Ninjemail(captcha_keys={'capsolver': {'token': 'aaaaaaaa'}})
+    manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}})
     username, password = manager.create_outlook_account(
         username="testuser", 
         password="testpassword",
@@ -157,7 +157,7 @@ def test_create_outlook_account():
 
 def test_create_outlook_account_no_info():
 
-    manager = Ninjemail(captcha_keys={'capsolver': {'token': 'aaaaaaaa'}})
+    manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}})
     username, password = manager.create_outlook_account(
     )
 
@@ -166,7 +166,7 @@ def test_create_outlook_account_no_info():
 
 def test_create_outlook_account_with_proxy():
 
-    manager = Ninjemail(captcha_keys={'capsolver': {'token': 'aaaaaaaa'}}, proxy='http://127.0.0.1:8080')
+    manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}}, proxy='http://127.0.0.1:8080')
     username, password = manager.create_outlook_account(
     )
 
@@ -236,7 +236,7 @@ def test_create_gmail_account_no_sms_key():
     
 def test_create_yahoo_account():
 
-    manager = Ninjemail(captcha_keys={'capsolver': {'token': 'aaaaaaaa'}},
+    manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}},
                         sms_keys={'smspool': {'token': 'bbbbbb'}})
     username, password = manager.create_yahoo_account(
         username="testuser", 
@@ -251,7 +251,7 @@ def test_create_yahoo_account():
 
 def test_create_yahoo_account_no_info():
 
-    manager = Ninjemail(captcha_keys={'capsolver': {'token': 'aaaaaaaa'}},
+    manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}},
                         sms_keys={'smspool': {'token': 'bbbbbb'}})
     username, password = manager.create_yahoo_account(
     )
@@ -261,7 +261,7 @@ def test_create_yahoo_account_no_info():
 
 def test_create_yahoo_account_with_proxy():
 
-    manager = Ninjemail(captcha_keys={'capsolver': {'token': 'aaaaaaaa'}},
+    manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}},
                         sms_keys={'smspool': {'token': 'bbbbbb'}}, proxy='http://127.0.0.1:8080')
     username, password = manager.create_yahoo_account(
     )
@@ -285,7 +285,7 @@ def test_create_yahoo_account_no_captcha_key():
 
 def test_create_yahoo_account_no_sms_key():
 
-    manager = Ninjemail(captcha_keys={'capsolver': {'token': 'aaaaaaaa'}})
+    manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}})
     with pytest.raises(ValueError) as excinfo:
         manager.create_yahoo_account(
             username="testuser", 

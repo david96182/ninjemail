@@ -80,7 +80,6 @@ def test_create_account_firefox_and_getsmscode(monkeypatch):
 
     driver = create_driver('firefox')
     # Test data
-    captcha_key= "4564654777"
     sms_key = {
         "name": "getsmscode",
         "data": {
@@ -97,7 +96,7 @@ def test_create_account_firefox_and_getsmscode(monkeypatch):
     year = "2000"
     myyahoo = False
 
-    email, password = create_account(captcha_key, driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
+    email, password = create_account(driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
     assert email == f"{username}@yahoo.com"
     assert password == "testpassword"
 
@@ -113,7 +112,6 @@ def test_create_account_chrome_and_smspool(monkeypatch):
             "token": "your_api_key",
         }
     }
-    captcha_key="5456646656"
     username = "testuser"
     password = "testpassword"
     first_name = "John"
@@ -123,7 +121,7 @@ def test_create_account_chrome_and_smspool(monkeypatch):
     year = "2000"
     myyahoo = False
 
-    email, password = create_account(captcha_key, driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
+    email, password = create_account(driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
     assert email == f"{username}@yahoo.com"
     assert password == "testpassword"
 
@@ -133,7 +131,6 @@ def test_create_account_firefox_and_fivesim(monkeypatch):
 
     driver = create_driver('firefox')
     # Test data
-    captcha_key= "4564654777"
     sms_key = {
         "name": "5sim",
         "data": {
@@ -150,7 +147,7 @@ def test_create_account_firefox_and_fivesim(monkeypatch):
     year = "2000"
     myyahoo = False
 
-    email, password = create_account(captcha_key, driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
+    email, password = create_account(driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
     assert email == f"{username}@yahoo.com"
     assert password == "testpassword"
 
@@ -161,7 +158,6 @@ def test_create_myyahoo_account(monkeypatch):
     driver = create_driver('chrome')
     # Test data
     
-    captcha_key="5456646656"
     sms_key = {
         "name": "smspool",
         "data": {
@@ -177,7 +173,7 @@ def test_create_myyahoo_account(monkeypatch):
     year = "2000"
     myyahoo = True
 
-    email, password = create_account(captcha_key, driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
+    email, password = create_account(driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
     assert email == f"{username}@myyahoo.com"
     assert password == "testpassword"
 
