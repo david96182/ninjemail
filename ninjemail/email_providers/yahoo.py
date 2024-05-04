@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
-from sms_services import getsmscode, smspool, fivesim
+from sms_services import get_sms_instance
 
 URL = 'https://login.yahoo.com/account/create'
 WAIT = 25
@@ -40,20 +40,7 @@ def create_account(driver,
 
     """
     SMS_SERVICE = sms_key['name']
-
-    if SMS_SERVICE == 'getsmscode':
-        data = sms_key['data'] 
-        data.update({'project': 15,
-                     'country': 'us'})
-        sms_provider = getsmscode.GetsmsCode(**data)
-    elif SMS_SERVICE == 'smspool':
-        data = sms_key['data']
-        data.update({'service': 1034})
-        sms_provider = smspool.SMSPool(**data)
-    elif SMS_SERVICE == '5sim':
-        data = sms_key['data']
-        data.update({'service': 'yahoo'})
-        sms_provider = fivesim.FiveSim(**data)
+    sms_provider = get_sms_instance(sms_key, 'yahoo')
 
     logging.info('Creating Yahoo account')
 

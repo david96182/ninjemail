@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
-from sms_services import getsmscode, smspool, fivesim
+from sms_services import get_sms_instance
 
 URL = 'https://accounts.google.com/signup'
 WAIT = 5
@@ -56,20 +56,7 @@ def create_account(driver,
 
     """
     SMS_SERVICE = sms_key['name']
-
-    if SMS_SERVICE == 'getsmscode':
-        data = sms_key['data'] 
-        data.update({'project': 1,
-                     'country': 'hk'})
-        sms_provider = getsmscode.GetsmsCode(**data)
-    elif SMS_SERVICE == 'smspool':
-        data = sms_key['data']
-        data.update({'service': 395})
-        sms_provider = smspool.SMSPool(**data)
-    elif SMS_SERVICE == '5sim':
-        data = sms_key['data']
-        data.update({'service': 'google'})
-        sms_provider = fivesim.FiveSim(**data)
+    sms_provider = get_sms_instance(sms_key, 'google')
 
     logging.info('Creating Gmail account')
 
