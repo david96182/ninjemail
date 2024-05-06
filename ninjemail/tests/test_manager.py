@@ -30,7 +30,7 @@ def test_init_invalid_browser():
 def test_get_proxy_with_provided_proxy(mocker):
   """Tests get_proxy with a user-provided proxy."""
   proxy = "http://myproxy:8080"
-  manager = Ninjemail(proxy=proxy)
+  manager = Ninjemail(proxies=[proxy])
   assert manager.get_proxy() == proxy
   mocker.assert_not_called()  # Assert FreeProxy.get wasn't called
 
@@ -166,7 +166,7 @@ def test_create_outlook_account_no_info():
 
 def test_create_outlook_account_with_proxy():
 
-    manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}}, proxy='http://127.0.0.1:8080')
+    manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}}, proxies=['http://127.0.0.1:8080'])
     username, password = manager.create_outlook_account(
     )
 
@@ -213,7 +213,7 @@ def test_create_gmail_account_no_info():
 
 def test_create_gmail_account_with_proxy():
 
-    manager = Ninjemail(sms_keys={'smspool': {'token': 'aaaaaaaa'}}, proxy='http://127.0.0.1:8080')
+    manager = Ninjemail(sms_keys={'smspool': {'token': 'aaaaaaaa'}}, proxies=['http://127.0.0.1:8080'])
     username, password = manager.create_gmail_account(
     )
 
@@ -262,7 +262,7 @@ def test_create_yahoo_account_no_info():
 def test_create_yahoo_account_with_proxy():
 
     manager = Ninjemail(browser='chrome', captcha_keys={'capsolver': {'token': 'aaaaaaaa'}},
-                        sms_keys={'smspool': {'token': 'bbbbbb'}}, proxy='http://127.0.0.1:8080')
+                        sms_keys={'smspool': {'token': 'bbbbbb'}}, proxies=['http://127.0.0.1:8080'])
     username, password = manager.create_yahoo_account(
     )
 

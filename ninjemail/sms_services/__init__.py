@@ -33,6 +33,4 @@ def get_sms_instance(sms_info, email_provider):
         data.update({'service': email_provider})
         sms_provider = fivesim.FiveSim(**data)
 
-    print(data)
-
     return sms_provider

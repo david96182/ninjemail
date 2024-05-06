@@ -51,7 +51,7 @@ class Ninjemail():
                  browser="firefox",
                  captcha_keys={},
                  sms_keys={},
-                 proxy=None,
+                 proxies=None,
                  auto_proxy=False
                  ):     
         """
@@ -61,7 +61,7 @@ class Ninjemail():
             browser (str, optional): The browser to be used for automation. Default is "firefox".
             captcha_keys (dict, optional): The API keys for captcha solving services. Default is an empty dictionary.
             sms_keys (dict, optional): The API keys for SMS services. Default is an empty dictionary.
-            proxy (str, optional): The proxy to use for the webdriver. Default is None.
+            proxies (list, optional): List of proxies to use for the webdriver. Default is None.
             auto_proxy (bool, optional): Flag to indicate whether to use free proxies. Default is False.
         """
         if browser not in SUPPORTED_BROWSERS:
@@ -76,7 +76,7 @@ class Ninjemail():
         self.default_sms_service = DEFAULT_SMS_SERVICE
         self.supported_solvers_by_email = SUPPORTED_SOLVERS_BY_EMAIL 
         
-        self.proxy = proxy
+        self.proxies = proxies
         self.auto_proxy = auto_proxy
 
         #Set up logging
@@ -104,8 +104,8 @@ class Ninjemail():
         """
         Returns a proxy if user provided one or tries to get a free proxy if auto_proxy is enabled.
         """
-        if self.proxy:
-            return self.proxy
+        if self.proxies:
+            return random.choice(self.proxies)
         elif self.auto_proxy:
             try:
                 logging.info('Getting Free Proxy..')

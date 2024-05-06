@@ -103,7 +103,7 @@ ninja = Ninjemail(
     	browser="firefox", 
     	captcha_keys={"capsolver": "YOUR_API_KEY"}, 
     	sms_keys={"service_name": {"user": "USERNAME", "token": "TOKEN"}},
-    	proxy='http://ip:port',
+    	proxies=['http://ip:port', 'http://ip2:port2'],
     	auto_proxy=True
 )
 ```
@@ -114,7 +114,7 @@ The `captcha_keys` parameter is a dictionary that contains the **API keys for su
 
 The `sms_keys` parameter is a dictionary that contains the **API key/s for the SMS service/s**, based on `config.toml`. The default value is an empty dictionary. You can provide an API key or keys for the SMS services if required. Currently, **"getsmscode"**, **"smspool"** and **"5sim"** are supported.
 
-The `proxy` parameter specifies the proxy server to be used for the creation of the email accounts. It should be a string in the format "http://ip:port" where "ip" is the IP address of the proxy server and "port" is the port number. 
+The `proxies` parameter specifies the list of proxy servers to be used for the creation of email accounts. Is optional and can accept either a single proxy server or multiple proxy servers in a list. Each proxy should be provided as a string in the format "http://ip:port," where "ip" represents the IP address of the proxy server and "port" represents the port number.
 
 The `auto_proxy` parameter is a boolean flag that determines whether Ninjemail should automatically obtain and rotate free proxies during automation tasks. If `auto_proxy` is set to `True`, Ninjemail will handle the process of acquiring and managing free proxies internally.
 
