@@ -23,7 +23,7 @@ Ninjemail is a Python library designed to streamline the process of creating ema
 - **Customizable Options:** Customize account details such as username, password, first name, last name, country, and birthdate to meet your specific requirements.
 - **Error Handling and Logging:** Ninjemail provides error handling capabilities and logs activities to facilitate debugging and tracking of account creation actions.
 - **Open-Source and Extensible:** Being an open-source project, Ninjemail encourages contributions and allows for further extension and improvement of its functionalities.
-- **Proxy Support:** Ninjemail includes proxy support, giving users the option to use their own proxies for account creation. This feature allows for enhanced privacy, security, and flexibility during the email account creation process.
+- **Proxy Support:** Ninjemail includes proxy support, giving users the option to use their own proxies for account creation, including support for authenticated proxies. This feature allows for enhanced privacy, security, and flexibility during the email account creation process.
 - **Free Proxy Option:** Additionally, Ninjemail offers an option to automatically retrieve and use free proxies. This feature provides users with a convenient solution for proxy usage, eliminating the need for purchasing or configuring proxies separately.
 
 ## Installation
@@ -114,7 +114,7 @@ The `captcha_keys` parameter is a dictionary that contains the **API keys for su
 
 The `sms_keys` parameter is a dictionary that contains the **API key/s for the SMS service/s**, based on `config.toml`. The default value is an empty dictionary. You can provide an API key or keys for the SMS services if required. Currently, **"getsmscode"**, **"smspool"** and **"5sim"** are supported.
 
-The `proxies` parameter specifies the list of proxy servers to be used for the creation of email accounts. Is optional and can accept either a single proxy server or multiple proxy servers in a list. Each proxy should be provided as a string in the format "http://ip:port," where "ip" represents the IP address of the proxy server and "port" represents the port number.
+The `proxies` parameter specifies the list of proxy servers to be used for the creation of email accounts. Is optional and can accept either a single proxy server or multiple proxy servers in a list. Each proxy should be provided as a string in the format "http://ip:port," where "ip" represents the IP address of the proxy server and "port" represents the port number. Additionally, support for authentication proxies is available, but exclusively for chrome and undetected-chrome for the moment. The format for authentication proxies remains the same: "http://username:password@ip:port".
 
 The `auto_proxy` parameter is a boolean flag that determines whether Ninjemail should automatically obtain and rotate free proxies during automation tasks. If `auto_proxy` is set to `True`, Ninjemail will handle the process of acquiring and managing free proxies internally.
 
@@ -226,7 +226,7 @@ print(f"Password: {password}")
 
 This will create an Outlook account with the provided information and print the email and password of the created account.
 
-Here's an example that demonstrates how to use Ninjemail to create a Yahoo account without providing any user information. Ninjemail will generate all the necessary data for you, including name, birthdate, etc. This example utilizes smspool as the SMS service and chrome as the web browser:
+Here's an example that demonstrates how to use Ninjemail to create a Yahoo account without providing any user information. Ninjemail will generate all the necessary data for you, including name, birthdate, etc. This example utilizes smspool as the SMS service, chrome as the web browser and an authenticated proxy:
 
 ```python
 from ninjemail import Ninjemail
@@ -236,7 +236,7 @@ ninja = Ninjemail(
     	    browser="chrome",
     		captcha_keys={"capsolver": "YOUR_API_KEY"},
     		sms_keys={"smspool": {"token": "TOKEN"}},
-			auto_proxy=True)
+			proxies=['http://username:password@ip_address:port'])
 email, password = ninja.create_yahoo_account(
     					use_proxy=False
 )

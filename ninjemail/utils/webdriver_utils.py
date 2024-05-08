@@ -10,7 +10,6 @@ from selenium.webdriver.common.by import By
 import undetected_chromedriver as uc
 import os
 from urllib.parse import urlparse
-import os
 import re
 import time
 
@@ -22,6 +21,49 @@ def add_capsolver_api_key(file_path, api_key):
 
     with open(file_path, 'w') as file:
         file.write(updated_content)
+
+def create_backgroundjs(host, port, username, password):
+    return """
+        var config = {
+                mode: "fixed_servers",
+                rules: {
+                singleProxy: {
+                    scheme: "http",
+                    host: "%s",
+                    port: parseInt(%s)
+                },
+                bypassList: ["localhost"]
+                }
+            };
+
+        chrome.proxy.settings.set({value: config, scope: "regular"}, function() {});
+
+        function callbackFn(details) {
+            return {
+                authCredentials: {
+                    username: "%s",
+                    password: "%s"
+                }
+            };
+        }
+
+        chrome.webRequest.onAuthRequired.addListener(
+                    callbackFn,
+                    {urls: ["<all_urls>"]},
+                    ['blocking']
+        );
+        """ % (host, port, username, password)
+
+def create_background_file(background_js):
+    folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'proxy_auth_ext')
+    file_path = os.path.join(folder_path, 'background.js')
+
+    os.makedirs(folder_path, exist_ok=True)
+
+    with open(file_path, 'w') as file:
+        file.write(background_js)
+
+    return folder_path
 
 def create_driver(browser, captcha_extension=False, proxy=None, captcha_key=None):
     """
@@ -45,6 +87,14 @@ def create_driver(browser, captcha_extension=False, proxy=None, captcha_key=None
         To create a headless Chrome driver with a proxy and captcha solving extension:
         >>> driver = create_driver('chrome', captcha_extension=True, proxy='http://127.0.0.1:8080')
     """
+    if proxy:
+        parsed_url = urlparse(proxy)
+
+        ip_address = parsed_url.hostname
+        port = parsed_url.port
+        username = parsed_url.username
+        password = parsed_url.password
+
     if browser == 'firefox':
         custom_profile = FirefoxProfile()
         custom_profile.set_preference("extensions.ui.developer_mode", True)
@@ -57,11 +107,6 @@ def create_driver(browser, captcha_extension=False, proxy=None, captcha_key=None
 
         # proxy
         if proxy:
-            parsed_url = urlparse(proxy)
-
-            ip_address = parsed_url.hostname
-            port = parsed_url.port
-
             options.set_preference("network.proxy.type", 1)
             options.set_preference("network.proxy.http", ip_address)
             options.set_preference("network.proxy.http_port", port)
@@ -95,26 +140,48 @@ def create_driver(browser, captcha_extension=False, proxy=None, captcha_key=None
         options.add_experimental_option('prefs', {'intl.accept_languages': 'en-us'})
         options.add_argument('--headless=new')
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
+        proxy_ext = None
         if proxy:
-            options.add_argument(f'--proxy-server={proxy}')
+            if username and password:
+                background_js = create_backgroundjs(ip_address, port, username, password)
+                proxy_ext = create_background_file(background_js)
+                if not captcha_extension:
+                    options.add_argument(f'--load-extension={proxy_ext}')
+            else:
+                options.add_argument(f'--proxy-server={proxy}')
         if captcha_extension:
             add_capsolver_api_key(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver-chrome-extension/assets/config.js'), captcha_key)
             ext_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver-chrome-extension/')
-            options.add_argument(f'--load-extension={ext_path}')
+            if proxy_ext:
+                options.add_argument(f'--load-extension={ext_path},{proxy_ext}')
+            else:
+                options.add_argument(f'--load-extension={ext_path}')
 
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+
     elif browser == 'undetected-chrome':
         options = uc.ChromeOptions()
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
         options.add_experimental_option('prefs', {'intl.accept_languages': 'en-us'})
 
+        proxy_ext = None
         if proxy:
-            options.add_argument(f'--proxy-server={proxy}')
+            if username and password:
+                background_js = create_backgroundjs(ip_address, port, username, password)
+                proxy_ext = create_background_file(background_js)
+                if not captcha_extension:
+                    options.add_argument(f'--load-extension={proxy_ext}')
+            else:
+                options.add_argument(f'--proxy-server={proxy}')
         if captcha_extension:
             add_capsolver_api_key(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver-chrome-extension/assets/config.js'), captcha_key)
             ext_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'captcha_solvers/capsolver-chrome-extension/')
-            options.add_argument(f'--load-extension={ext_path}')
+            if proxy_ext:
+                options.add_argument(f'--load-extension={ext_path},{proxy_ext}')
+            else:
+                options.add_argument(f'--load-extension={ext_path}')
 
         driver = uc.Chrome(options=options, headless=True, use_subprocess=False) 
     else:

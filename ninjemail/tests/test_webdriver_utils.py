@@ -71,6 +71,15 @@ def test_create_undetected_chrome_driver_with_proxy_and_captcha():
     assert isinstance(driver, uc.Chrome)
     driver.quit()
 
+def test_create_undetected_chrome_driver_with_auth_proxy_and_captcha():
+    driver = create_driver('undetected-chrome', captcha_extension=True, proxy='http://user:pass@10.10.10.1:2020', captcha_key='test_key')
+    assert isinstance(driver, uc.Chrome)
+    driver.quit()
+
+def test_create_undetected_chrome_driver_with_auth_proxy():
+    driver = create_driver('undetected-chrome', captcha_extension=False, proxy='http://user:pass@10.10.10.1:2020')
+    assert isinstance(driver, uc.Chrome)
+    driver.quit()
 
 def test_create_firefox_driver_with_proxy():
     proxy_url = 'http://127.0.0.1:8080'
@@ -83,6 +92,13 @@ def test_create_firefox_driver_with_proxy():
 
 def test_create_chrome_driver_with_proxy():
     proxy_url = 'http://127.0.0.1:8080'
+
+    driver = create_driver('chrome', proxy=proxy_url)
+    assert isinstance(driver, Chrome)
+    driver.quit()
+
+def test_create_chrome_driver_with_auth_proxy():
+    proxy_url = 'http://user:pass@127.0.0.1:8080'
 
     driver = create_driver('chrome', proxy=proxy_url)
     assert isinstance(driver, Chrome)
