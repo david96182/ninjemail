@@ -73,7 +73,7 @@ def create_account(driver,
     # select birthdate
     time.sleep(10)
     month_combobox = Select(WebDriverWait(driver, WAIT).until(EC.element_to_be_clickable((By.ID, 'month'))))
-    month_combobox.select_by_index(month)
+    month_combobox.select_by_index(int(month))
     # driver.find_element(By.XPATH, f'//*[@id="month"]/option[{month}]').click() alternative
 
     day_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.XPATH, '//input[@name="day"]')))
