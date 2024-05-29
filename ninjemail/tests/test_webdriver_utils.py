@@ -44,6 +44,7 @@ def mock_driver_manager_installations(monkeypatch):
     monkeypatch.setattr('selenium.webdriver.Firefox.install_addon', mock_firefox_addon)
     monkeypatch.setattr('selenium.webdriver.Firefox.get', MagicMock())
     monkeypatch.setattr('selenium.webdriver.Firefox.find_element', MagicMock())
+    monkeypatch.setattr('selenium.webdriver.Chrome.get', MagicMock())
     monkeypatch.setattr('selenium.webdriver.Chrome.quit', mock_chrome_quit)
     monkeypatch.setattr('undetected_chromedriver.Chrome.quit', mock_chrome_quit)
 
@@ -66,13 +67,18 @@ def test_create_undetected_chrome_driver():
     assert isinstance(driver, uc.Chrome)
     driver.quit()
 
-def test_create_undetected_chrome_driver_with_proxy_and_captcha():
-    driver = create_driver('undetected-chrome', captcha_extension=True, proxy='http://10.10.10.1:2020', captcha_key='test_key')
+def test_create_undetected_chrome_driver_with_proxy_and_capsolver():
+    driver = create_driver('undetected-chrome', captcha_extension=True, proxy='http://10.10.10.1:2020', captcha_key={'name': 'capsolver', 'key': 'test_key'})
     assert isinstance(driver, uc.Chrome)
     driver.quit()
 
-def test_create_undetected_chrome_driver_with_auth_proxy_and_captcha():
-    driver = create_driver('undetected-chrome', captcha_extension=True, proxy='http://user:pass@10.10.10.1:2020', captcha_key='test_key')
+def test_create_undetected_chrome_driver_with_proxy_and_nopecha():
+    driver = create_driver('undetected-chrome', captcha_extension=True, proxy='http://10.10.10.1:2020', captcha_key={'name': 'nopecha', 'key': 'test_key'})
+    assert isinstance(driver, uc.Chrome)
+    driver.quit()
+
+def test_create_undetected_chrome_driver_with_auth_proxy_and_nopecha():
+    driver = create_driver('undetected-chrome', captcha_extension=True, proxy='http://user:pass@10.10.10.1:2020', captcha_key={'name': 'nopecha', 'key': 'test_key'})
     assert isinstance(driver, uc.Chrome)
     driver.quit()
 
@@ -104,14 +110,19 @@ def test_create_chrome_driver_with_auth_proxy():
     assert isinstance(driver, Chrome)
     driver.quit()
 
-def test_create_chrome_driver_with_proxy_and_captcha():
-    driver = create_driver('chrome', captcha_extension=True, proxy='http://10.10.10.1:2020', captcha_key='test_key')
+def test_create_chrome_driver_with_proxy_and_nopecha():
+    driver = create_driver('chrome', captcha_extension=True, proxy='http://10.10.10.1:2020', captcha_key={'name': 'nopecha', 'key': 'test_key'})
+    assert isinstance(driver, Chrome)
+    driver.quit()
+
+def test_create_chrome_driver_with_proxy_and_capsolver():
+    driver = create_driver('chrome', captcha_extension=True, proxy='http://10.10.10.1:2020', captcha_key={'name': 'capsolver', 'key': 'test_key'})
     assert isinstance(driver, Chrome)
     driver.quit()
 
 def test_create_firefox_driver_with_captcha_extension():
 
-    driver = create_driver('firefox', captcha_extension=True, captcha_key='test_key')
+    driver = create_driver('firefox', captcha_extension=True, captcha_key={'name': 'capsolver', 'key': 'test_key'})
     assert isinstance(driver, Firefox)
     driver.quit()
 

@@ -56,7 +56,7 @@ def test_get_captcha_key_valid_provider(mocker):
   """Tests get_captcha_key with a valid email provider and key."""
   mocker.patch.dict('ninjemail_manager.SUPPORTED_SOLVERS_BY_EMAIL', {'outlook': ['solver1']})
   manager = Ninjemail(captcha_keys={"solver1": "key"})
-  assert manager.get_captcha_key('outlook') == "key"
+  assert manager.get_captcha_key('outlook') == {"name" : "solver1", "key": "key"}
 
 
 def test_get_captcha_key_invalid_provider():

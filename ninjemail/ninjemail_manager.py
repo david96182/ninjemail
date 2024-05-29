@@ -123,7 +123,7 @@ class Ninjemail():
         """
         for solver in self.supported_solvers_by_email.get(email_provider.lower(), []):
             if solver in self.captcha_keys:
-                return self.captcha_keys[solver]
+                return {"name": solver, "key": self.captcha_keys[solver]}
         logging.info(f'Supported captcha solving services for {email_provider} are: { self.supported_solvers_by_email[email_provider.lower()]}')
         raise ValueError(f"No captcha key provided for email provider: {email_provider}")
 

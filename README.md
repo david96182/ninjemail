@@ -101,7 +101,7 @@ To create an instance of Ninjemail, call the `Ninjemail` class with optional par
 ```python
 ninja = Ninjemail(
     	browser="firefox", 
-    	captcha_keys={"capsolver": "YOUR_API_KEY"}, 
+    	captcha_keys={"capsolver": "YOUR_API_KEY", "nopecha": "YOUR_API_KEY"}, 
     	sms_keys={"service_name": {"user": "USERNAME", "token": "TOKEN"}},
     	proxies=['http://ip:port', 'http://ip2:port2'],
     	auto_proxy=True
@@ -110,7 +110,12 @@ ninja = Ninjemail(
 
 The `browser` parameter specifies the browser to be used for automation. The default value is "firefox". Currently, Ninjemail supports **Firefox, Chrome and Undetected Chrome**. The acceptable values for the browser parameter are `firefox`, `chrome` and `undetected-chrome` respectively.
 
-The `captcha_keys` parameter is a dictionary that contains the **API keys for supported captcha solving services**, based on `config.toml`. The default value is an empty dictionary. You can provide API keys for specific captcha solving services if required. Currently, **"capsolver"** is supported.
+The `captcha_keys` parameter is a dictionary that contains the **API keys for supported captcha solving services**, based on `config.toml`. The default value is an empty dictionary. You can provide API keys for specific captcha solving services if required. Currently, the following services are supported:
+
+- **"capsolver"**
+- **"nopecha"**
+
+To provide the API keys for these services, you can pass a dictionary to the `captcha_keys` parameter. Each key-value pair in the dictionary corresponds to a captcha solving service and its respective API key as shown in the example above.
 
 The `sms_keys` parameter is a dictionary that contains the **API key/s for the SMS service/s**, based on `config.toml`. The default value is an empty dictionary. You can provide an API key or keys for the SMS services if required. Currently, **"getsmscode"**, **"smspool"** and **"5sim"** are supported.
 
@@ -234,7 +239,7 @@ from ninjemail import Ninjemail
 # Replace "YOUR_API_KEY" and "TOKEN" with your actual API keys
 ninja = Ninjemail(
     	    browser="chrome",
-    		captcha_keys={"capsolver": "YOUR_API_KEY"},
+    		captcha_keys={"nopecha": "YOUR_API_KEY"},
     		sms_keys={"smspool": {"token": "TOKEN"}},
 			proxies=['http://username:password@ip_address:port'])
 email, password = ninja.create_yahoo_account(
