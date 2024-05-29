@@ -4,9 +4,7 @@ requests
 fake_useragent
 free-proxy
 toml
-deathbycaptcha-official
 Faker
-capsolver
 pytest
 pytest-mock
 pytest-cov
