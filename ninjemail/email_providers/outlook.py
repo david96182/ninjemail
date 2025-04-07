@@ -1,137 +1,199 @@
 import logging
-import time
+from typing import Optional, Tuple
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait, Select
 
-URL = 'https://signup.live.com/signup'
-WAIT = 25
+logger = logging.getLogger(__name__)
 
-def create_account(driver, 
-                   username, 
-                   password, 
-                   first_name, 
-                   last_name,
-                   country,
-                   month,
-                   day,
-                   year,
-                   hotmail):
-    """
-    Automatically creates an outlook/hotmail account.
+# Centralized selector configuration
+SELECTORS = {
+    "email_switch": (By.ID, 'liveSwitch'),
+    "username_input": (By.ID, 'usernameInput'),
+    "domain_select": (By.ID, 'domainSelect'),
+    "next_button": (By.ID, 'nextButton'),
+    "show_password": (By.ID, 'ShowHidePasswordCheckbox'),
+    "optin_email": (By.ID, 'iOptinEmail'),
+    "password_input": (By.ID, 'Password'),
+    "first_name_input": (By.ID, 'firstNameInput'),
+    "last_name_input": (By.ID, 'lastNameInput'),
+    "country_select": (By.ID, 'countryRegionDropdown'),
+    "birth_month": (By.ID, 'BirthMonth'),
+    "birth_day": (By.ID, 'BirthDay'),
+    "birth_year": (By.ID, 'BirthYear'),
+    "captcha_frame": (By.ID, "enforcementFrame"),
+    "captcha_reload": (By.XPATH, "//button[contains(text(), 'Reload Challenge')]"),
+    "success_message": (By.XPATH, "//span[contains(text(), 'A quick note about your Microsoft account')]"),
+    "ok_button": (By.ID, "id__0")
+}
 
-    Args:
-        driver (WebDriver): The Selenium WebDriver instance for the configured browser.
-        username (str): The desired username for the email account.
-        password (str): The desired password for the email account.
-        first_name (str): The first name for the account holder.
-        last_name (str): The last name for the account holder.
-        country (str): The country for the account holder.
-        month (str): The birth month for the account holder.
-        day (str): The birth day for the account holder.
-        year (str): The birth year for the account holder.
-        hotmail (bool): Flag indicating whether to create a Hotmail account.
+WAIT_TIMEOUT = 10
+MAX_CAPTCHA_RETRIES = 3
+CAPTCHA_RETRY_DELAY = 60
 
-    Returns:
-        tuple: Email and password of the created account.
+class AccountCreationError(Exception):
+    """Base exception for account creation failures"""
+    pass
 
-    """
-    logging.info('Creating outlook account')
-
-    driver.get(URL)
-
-    # Select create email
-    email_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'liveSwitch')))
-    email_input.click()
-
-    driver.implicitly_wait(2)
-
-    # Insert username
-    username_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'MemberName')))
-    username_input.send_keys(username)
-
-    # Select hotmail if hotmail is True
-    if hotmail:
-        email_domain_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'LiveDomainBoxList'))))
-        email_domain_combobox.select_by_index(1)
-
-    driver.find_element(By.ID, 'iSignupAction').click()
-    driver.implicitly_wait(2)
-
-    # Insert password and dismark notifications
+def safe_click(element: WebElement) -> None:
+    """Click element with JavaScript as fallback"""
     try:
-        show_password_checkbox = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'ShowHidePasswordCheckbox')))
-        show_password_checkbox.click()
-        time.sleep(3)
-        driver.find_element(By.ID, 'iOptinEmail').click()
-    except:
+        element.click()
+    except WebDriverException:
         pass
-    driver.find_element(By.ID, 'PasswordInput').send_keys(password)
-    password_next = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'iSignupAction')))
-    password_next.click()
-    
-    driver.implicitly_wait(2)
 
-    # Insert First and Last name
-    first_name_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'FirstName')))
-    first_name_input.send_keys(first_name)
-    last_name_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'LastName')))
-    last_name_input.send_keys(last_name)
-    driver.find_element(By.ID, 'iSignupAction').click()
+def wait_and_click(driver: WebDriver, by: Tuple[str, str], timeout: int = WAIT_TIMEOUT) -> None:
+    """Wait for element to be clickable and click it"""
+    element = WebDriverWait(driver, timeout).until(
+        EC.element_to_be_clickable(by)
+    )
+    safe_click(element)
 
-    # Insert Country and birthdate
-    country_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'Country'))))
-    country_combobox.select_by_visible_text(country)
+def set_input_value(driver: WebDriver, selector: Tuple[str, str], value) -> None:
+    """Set input value with JavaScript to ensure proper update"""
+    element = WebDriverWait(driver, WAIT_TIMEOUT).until(
+        EC.presence_of_element_located(selector)
+    )
+    element.send_keys(value)
 
-    month_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'BirthMonth'))))
-    month_combobox.select_by_index(int(month))
+def select_dropdown(driver: WebDriver, by: Tuple[str, str], value: str) -> None:
+    """Select an option from a dropdown menu"""
+    element = WebDriverWait(driver, WAIT_TIMEOUT).until(
+        EC.presence_of_element_located(by)
+    )
+    Select(element).select_by_visible_text(value)
 
-    day_combobox = Select(WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'BirthDay'))))
-    day_combobox.select_by_index(int(day))
+def select_dropdown_by_index(driver: WebDriver, by: Tuple[str, str], index: int) -> None:
+    """Select a dropdown option by index"""
+    element = WebDriverWait(driver, WAIT_TIMEOUT).until(
+        EC.presence_of_element_located(by)
+    )
+    Select(element).select_by_index(index)
 
-    year_input = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.ID, 'BirthYear')))
-    year_input.send_keys(year)
-    driver.find_element(By.ID, 'iSignupAction').click()
-
-    driver.implicitly_wait(2)
-
-    # captcha next button
-    WebDriverWait(driver, WAIT).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "enforcementFrame")))
-    WebDriverWait(driver, WAIT).until(EC.frame_to_be_available_and_switch_to_it((By.TAG_NAME, "iframe")))
-    WebDriverWait(driver, WAIT).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "game-core-frame")))
-    next_button = WebDriverWait(driver, WAIT).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div#root > div > div > button")))
-    next_button.click()
-
-    wait = WebDriverWait(driver, 60) # wait for capsolver extension to solve the captcha
-    for _ in range(3):
-        try:
-            h2_element = wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'Something went wrong. Please reload the challenge to try again.')]")))
-
-            if h2_element and isinstance(h2_element, WebElement):
-                button = driver.find_element(By.XPATH, "//button[contains(text(), 'Reload Challenge')]")
-                button.click()
-        except:
-            break
-
-    time.sleep(5)
+def handle_captcha(driver: WebDriver) -> None:
+    """Handle Microsoft account captcha challenge"""
+    success = False
     try:
-        acc_created_text = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[contains(text(), 'A quick note about your Microsoft account')]")))
-        if acc_created_text:
-            logging.info(f'{"Hotmail" if hotmail else "Outlook"} email account created successfully.')
-            logging.info("Account Details:")
-            logging.info(f"Email:      {username}@{'hotmail' if hotmail else 'outlook'}.com")
-            logging.info(f"Password:      {password}")
-            logging.info(f"First Name:    {first_name}")
-            logging.info(f"Last Name:     {last_name}")
-            logging.info(f"Country:       {country}")
-            logging.info(f"Date of Birth: {month}/{day}/{year}")
-            driver.quit()
-            return f"{username}@{'hotmail' if hotmail else 'outlook'}.com", password
-    except:
-        logging.error(f"There was an error creating the {'Hotmail' if hotmail else 'Outlook'} account.")
-        return None, None
+        # Switch to captcha frames
+        WebDriverWait(driver, WAIT_TIMEOUT).until(
+            EC.frame_to_be_available_and_switch_to_it(SELECTORS["captcha_frame"])
+        )
+        WebDriverWait(driver, WAIT_TIMEOUT).until(
+            EC.frame_to_be_available_and_switch_to_it((By.TAG_NAME, "iframe"))
+        )
+        WebDriverWait(driver, WAIT_TIMEOUT).until(
+            EC.frame_to_be_available_and_switch_to_it((By.ID, "game-core-frame"))
+        )
+        
+        # Initial captcha click
+        wait_and_click(driver, (By.CSS_SELECTOR, "div#root > div > div > button"))
+        
+        # Handle potential retries
+        for _ in range(MAX_CAPTCHA_RETRIES):
+            try:
+                WebDriverWait(driver, CAPTCHA_RETRY_DELAY).until(
+                    EC.url_contains('privacynotice')
+                )
+                if 'privacynotice' in driver.current_url:
+                    success = True
+                    break
+            except TimeoutException:
+                continue
+        if not success:
+            raise AccountCreationError("The captcha was not solved")
+    except Exception as e:
+        logger.error("Captcha handling failed: %s", str(e))
+        raise AccountCreationError("Captcha challenge failed") from e
+    finally:
+        driver.switch_to.default_content()
 
-    driver.quit()
+def verify_account_creation(driver: WebDriver) -> bool:
+    """Verify successful account creation and complete final steps"""
+    try:
+        WebDriverWait(driver, WAIT_TIMEOUT).until(
+            EC.visibility_of_element_located(SELECTORS["success_message"])
+        )
+        
+        # Complete post-creation steps
+        wait_and_click(driver, SELECTORS["ok_button"])
+        
+        return True
+    except TimeoutException:
+        logger.error("Account creation verification timeout")
+        return False
 
+def create_account(
+    driver: WebDriver,
+    username: str,
+    password: str,
+    first_name: str,
+    last_name: str,
+    country: str,
+    month: str,
+    day: str,
+    year: str,
+    hotmail: bool
+) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Create a new Microsoft account (Outlook/Hotmail) with enhanced reliability
+    
+    Returns:
+        Tuple: (email, password) or (None, None) on failure
+    """
+    try:
+        logger.info('Starting Microsoft account creation process')
+        driver.get('https://signup.live.com/signup')
+
+        # Initial email setup
+        wait_and_click(driver, SELECTORS["email_switch"])
+        driver.implicitly_wait(2)
+        set_input_value(driver, SELECTORS["username_input"], username)
+
+        if hotmail:
+            select_dropdown_by_index(driver, SELECTORS["domain_select"], 1)
+
+        wait_and_click(driver, SELECTORS["next_button"])
+
+        # Password setup
+        try:
+            wait_and_click(driver, SELECTORS["show_password"])
+            wait_and_click(driver, SELECTORS["optin_email"])
+        except TimeoutException:
+            logger.debug("Optional password visibility elements not found")
+        
+        set_input_value(driver, SELECTORS["password_input"], password)
+        wait_and_click(driver, SELECTORS["next_button"])
+
+        # Personal information
+        set_input_value(driver, SELECTORS["first_name_input"], first_name)
+        set_input_value(driver, SELECTORS["last_name_input"], last_name)
+        wait_and_click(driver, SELECTORS["next_button"])
+
+        # Demographic information
+        select_dropdown(driver, SELECTORS["country_select"], country)
+        select_dropdown_by_index(driver, SELECTORS["birth_month"], int(month))
+        select_dropdown_by_index(driver, SELECTORS["birth_day"], int(day))
+        set_input_value(driver, SELECTORS["birth_year"], year)
+        wait_and_click(driver, SELECTORS["next_button"])
+
+        # Captcha handling
+        handle_captcha(driver)
+
+        # Final verification
+        if not verify_account_creation(driver):
+            raise AccountCreationError("Account creation verification failed")
+
+        # Log successful creation
+        logger.info(f"{"Hotmail" if hotmail else "Outlook"} account created successfully")
+        logger.debug("Account details: %s@%s.com", username, "hotmail" if hotmail else "outlook")
+        
+        return f"{username}@{'hotmail' if hotmail else 'outlook'}.com", password
+
+    except Exception as e:
+        logger.error("Account creation failed: %s", str(e))
+        raise AccountCreationError("Microsoft account creation process failed") from e
+    finally:
+        driver.quit()
