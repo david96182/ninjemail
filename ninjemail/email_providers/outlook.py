@@ -1,9 +1,9 @@
 import logging
 from typing import Optional, Tuple
-from selenium.common.exceptions import TimeoutException, WebDriverException
+from utils.web_helpers import wait_and_click, set_input_value
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait, Select
 
@@ -37,27 +37,6 @@ CAPTCHA_RETRY_DELAY = 60
 class AccountCreationError(Exception):
     """Base exception for account creation failures"""
     pass
-
-def safe_click(element: WebElement) -> None:
-    """Click element with JavaScript as fallback"""
-    try:
-        element.click()
-    except WebDriverException:
-        pass
-
-def wait_and_click(driver: WebDriver, by: Tuple[str, str], timeout: int = WAIT_TIMEOUT) -> None:
-    """Wait for element to be clickable and click it"""
-    element = WebDriverWait(driver, timeout).until(
-        EC.element_to_be_clickable(by)
-    )
-    safe_click(element)
-
-def set_input_value(driver: WebDriver, selector: Tuple[str, str], value) -> None:
-    """Set input value with JavaScript to ensure proper update"""
-    element = WebDriverWait(driver, WAIT_TIMEOUT).until(
-        EC.presence_of_element_located(selector)
-    )
-    element.send_keys(value)
 
 def select_dropdown(driver: WebDriver, by: Tuple[str, str], value: str) -> None:
     """Select an option from a dropdown menu"""

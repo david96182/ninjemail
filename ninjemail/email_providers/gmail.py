@@ -1,10 +1,10 @@
 import logging
 import time
 from typing import Optional, Tuple
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException, NoAlertPresentException
+from utils.web_helpers import wait_and_click, set_input_value
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, NoAlertPresentException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.common.keys import Keys
@@ -51,20 +51,6 @@ class AccountCreationError(Exception):
     """Base exception for account creation failures"""
     pass
 
-def safe_click(element: WebElement) -> None:
-    """Click element with JavaScript as fallback"""
-    try:
-        element.click()
-    except WebDriverException:
-        pass
-
-def wait_and_click(driver: WebDriver, by: Tuple[str, str], timeout: int = WAIT_TIMEOUT) -> None:
-    """Wait for element to be clickable and click it"""
-    element = WebDriverWait(driver, timeout).until(
-        EC.element_to_be_clickable(by)
-    )
-    safe_click(element)
-
 def next_button(driver: WebDriver) -> None:
     """Click the next button with improved reliability"""
     for selector in NEXT_BUTTON_SELECTORS:
@@ -85,13 +71,6 @@ def set_how_to_set_username(driver: WebDriver) -> None:
         how_to_set_username.click()
     except:
         pass
-
-def set_input_value(driver: WebDriver, selector: Tuple[str, str], value) -> None:
-    """Set input value with JavaScript to ensure proper update"""
-    element = WebDriverWait(driver, WAIT_TIMEOUT).until(
-        EC.presence_of_element_located(selector)
-    )
-    driver.execute_script("arguments[0].value = arguments[1];", element, value)
 
 def handle_errors(driver: WebDriver) -> None:
     """Check for common error conditions"""
