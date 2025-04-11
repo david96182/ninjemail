@@ -241,7 +241,6 @@ class Ninjemail():
                                first_name="", 
                                last_name="",
                                birthdate="",
-                               myyahoo=False,
                                use_proxy=True):
         """
         Creates a Yahoo/Myyahoo account using the provided information.
@@ -252,7 +251,6 @@ class Ninjemail():
             first_name (str, optional): The first name of the account holder.
             last_name (str, optional): The last name of the account holder.
             birthdate (str, optional): The birthdate of the account holder in the format "MM-DD-YYYY".
-            myyahoo (bool, optional): Flag indicating whether to create a Myyahoo account. Default is False.
             use_proxy (bool, optional): Flag indicating whether to use a proxy to create the account. Default is True.
 
         Returns:
@@ -280,5 +278,4 @@ class Ninjemail():
                                     last_name,
                                     month,
                                     day,
-                                    year,
-                                    myyahoo)
+                                    year)

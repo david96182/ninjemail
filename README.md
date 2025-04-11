@@ -190,12 +190,11 @@ ninja.create_yahoo_account(
     		first_name="", 
     		last_name="", 
     		birthdate="",
-    		myyahoo=False
     		use_proxy=True
 )
 ```
 
-The parameters are the same as for creating an Outlook account, except there is no 'country' parameter, and there is a specific parameter for a Yahoo account that is `myyahoo`. The `myyahoo` parameter is a boolean flag indicating whether to create a Myyahoo account. The default value is False (creates a Yahoo account).
+The parameters are the same as for creating an Outlook account, except there is no 'country' parameter. 
 
 The method returns the email and password of the created account.
 
@@ -258,7 +257,7 @@ Ninjemail currently supports account creation for the following email providers:
 
 - Gmail
 - Outlook/Hotmail
-- Yahoo/Myyahoo
+- Yahoo
 - and more to come!
 
 ## Supported SMS Services
