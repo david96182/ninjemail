@@ -5,6 +5,21 @@ import string
 import random
 
 
+MONTHS_MAPPING = {
+    '1': 'January',
+    '2': 'February',
+    '3': 'March',
+    '4': 'April',
+    '5': 'May',
+    '6': 'June',
+    '7': 'July',
+    '8': 'August',
+    '9': 'September',
+    '10': 'October',
+    '11': 'November',
+    '12': 'December'
+}
+
 class CountryProvider(BaseProvider):
     def country(self):
         """
@@ -96,3 +111,14 @@ def  generate_missing_info(username, password, first_name, last_name, country, b
         
     return username, password, first_name, last_name, country, birthdate 
 
+def get_month_by_number(month_number):
+    """
+    Get the month name by its number.
+
+    Args:
+        month_number (str): The number of the month (1-12).
+
+    Returns:
+        str: The name of the month.
+    """
+    return MONTHS_MAPPING.get(month_number.removeprefix('0'), "Invalid month number")

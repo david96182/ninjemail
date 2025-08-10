@@ -1,14 +1,15 @@
 import logging
 import time
 from typing import Optional, Tuple
-from utils.web_helpers import wait_and_click, set_input_value
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, NoAlertPresentException
+from utils.web_helpers import wait_and_click, set_input_value, type_into, action_chain_click
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, NoAlertPresentException, ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.common.keys import Keys
 from sms_services import get_sms_instance
+from utils import get_month_by_number
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +68,7 @@ def next_button(driver: WebDriver) -> None:
 def set_how_to_set_username(driver: WebDriver) -> None:
     """Set how to set username"""
     try:
-        how_to_set_username = WebDriverWait(driver, WAIT_TIMEOUT).until(EC.element_to_be_clickable((By.ID, 'selectionc3')))
+        how_to_set_username = WebDriverWait(driver, WAIT_TIMEOUT).until(EC.element_to_be_clickable((By.ID, 'selectionc22')))
         how_to_set_username.click()
     except:
         pass
@@ -96,22 +97,30 @@ def fill_personal_info(driver: WebDriver, first_name: str, last_name: str) -> No
 def fill_birthdate(driver: WebDriver, month, day, year) -> None:
     """Fill in birthdate information"""
     try:
-        # Select month from dropdown
-        month_select = Select(WebDriverWait(driver, WAIT_TIMEOUT).until(
-            EC.element_to_be_clickable(SELECTORS["month"])
-        ))
-        month_select.select_by_index(int(month))
-        
         # Set day and year
-        set_input_value(driver, SELECTORS["day"], day)
-        set_input_value(driver, SELECTORS["year"], year)
+        type_into(driver, SELECTORS["day"], day)
+        type_into(driver, SELECTORS["year"], year)
+
+        # Select month from dropdown
+        month_select = WebDriverWait(driver, WAIT_TIMEOUT).until(
+            EC.element_to_be_clickable(SELECTORS["month"])
+        )
+        action_chain_click(driver, month_select)
+
+        month_element = month_select.find_element(By.XPATH, f"//span[text()='{get_month_by_number(month)}']")
+        driver.execute_script("arguments[0].scrollIntoView(true);", month_element)
+        action_chain_click(driver, month_element)
         
         # Select gender (index 3 = 'Rather not say')
-        gender_select = Select(driver.find_element(*SELECTORS["gender"]))
-        gender_select.select_by_index(3)
+        gender_select = WebDriverWait(driver, WAIT_TIMEOUT).until(
+            EC.element_to_be_clickable(SELECTORS["gender"])
+        )
+        action_chain_click(driver, gender_select)
+        gender_element = gender_select.find_element(By.XPATH, "//span[text()='Rather not say']")
+        action_chain_click(driver, gender_element)
         
         next_button(driver)
-    except (NoSuchElementException, TimeoutException) as e:
+    except (NoSuchElementException, TimeoutException, ElementClickInterceptedException) as e:
         logger.error("Failed to fill birthdate info")
         raise AccountCreationError("Birthdate section failed") from e
 
@@ -200,8 +209,8 @@ def create_account(
         set_how_to_set_username(driver)
         set_input_value(driver, SELECTORS["username"], username)
         next_button(driver)
-        set_input_value(driver, SELECTORS["password"], password)
-        set_input_value(driver, SELECTORS["password_confirm"], password)
+        type_into(driver, SELECTORS["password"], password)
+        type_into(driver, SELECTORS["password_confirm"], password)
         next_button(driver)
 
         handle_errors(driver)
