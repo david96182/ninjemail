@@ -251,6 +251,85 @@ print(f"Password: {password}")
 
 This will create a Yahoo account with auto-generated information and will print the email and password of the created account.
 
+## Using Proxies with Ninjemail
+
+### Why Use Proxies?
+
+When creating multiple email accounts or automating account creation, using proxies is essential for:
+- **Avoiding rate limits and IP blocks** from email providers
+- **Distributing requests** across multiple IP addresses
+- **Maintaining account security** by masking your actual IP address
+- **Bypassing geographical restrictions** when creating accounts
+
+### Proxy Configuration Options
+
+Ninjemail supports multiple ways to configure proxies:
+
+#### 1. Using Your Own Proxies
+
+You can provide your own proxy list when initializing Ninjemail:
+
+```python
+from ninjemail import Ninjemail
+
+# Single proxy
+ninja = Ninjemail(proxies=['http://ip:port'])
+
+# Multiple proxies (Ninjemail will rotate between them)
+ninja = Ninjemail(proxies=[
+    'http://ip1:port1',
+    'http://ip2:port2',
+    'http://ip3:port3'
+])
+
+# Authenticated proxies
+ninja = Ninjemail(proxies=[
+    'http://username:password@ip:port'
+])
+```
+
+#### 2.  Automatic Free Proxies
+
+Ninjemail can automatically fetch and rotate free proxies:
+
+```python
+ninja = Ninjemail(auto_proxy=True)
+```
+
+**Note:** Free proxies may be unreliable or slower. It is recommended using a professional proxy service.
+
+#### 3. Controlling Proxy Usage Per Account
+
+You can enable or disable proxy usage for individual account creation:
+
+```python
+# Create account with proxy
+email, password = ninja.create_outlook_account(use_proxy=True)
+
+# Create account without proxy
+email, password = ninja.create_gmail_account(use_proxy=False)
+```
+
+### Recommended:  Thordata Proxies *(Sponsored)*
+
+For reliable, high-performance proxy services specifically optimized for web scraping and automation tasks like email account creation, we recommend **[Thordata](https://www.thordata.com/?ls=github&lk=ninjemail)**.
+
+**Using Thordata with Ninjemail:**
+
+```python
+from ninjemail import Ninjemail
+
+# Configure Thordata proxies
+ninja = Ninjemail(proxies=[
+    'http://username:password@proxy.thordata.com:port'
+])
+
+# Create accounts with Thordata proxies
+email, password = ninja.create_outlook_account(use_proxy=True)
+```
+
+You can get started with Thordata at [thordata.com](https://www.thordata.com/?ls=github&lk=ninjemail).
+
 ## Supported Providers
 
 Ninjemail currently supports account creation for the following email providers:
