@@ -32,13 +32,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           # Install the package in editable mode so scripts can import ninjemail
-          pip install -e .
+          # package not packaged in repo (no setup.py/pyproject.toml); will use PYTHONPATH at runtime
 
       - name: Run Gmail creation script
         env:
           CAPSOLVER_KEY: ${{ secrets.CAPSOLVER_KEY }}
           SMS_5SIM_TOKEN: ${{ secrets.SMS_5SIM_TOKEN }}
           HTTP_PROXY: ${{ secrets.HTTP_PROXY }}
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           # headless input defaults to 'true' — script decides how to use it
           python scripts/gh_run_gmail.py --headless "${{ github.event.inputs.headless || 'true' }}"
