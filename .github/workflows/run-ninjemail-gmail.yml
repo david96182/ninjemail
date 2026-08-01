@@ -1,0 +1,42 @@
+# GitHub Actions workflow to run a Gmail account creation via Ninjemail
+# SECURITY: This workflow relies on secrets stored in the repository settings.
+# Do NOT store API keys in repository files. Configure the following secrets in Settings > Secrets:
+#   - CAPSOLVER_KEY
+#   - SMS_5SIM_TOKEN
+#   - (optional) HTTP_PROXY
+
+name: Run Ninjemail Gmail flow
+
+on:
+  workflow_dispatch:
+    inputs:
+      headless:
+        description: 'Run browser headless (true/false)'
+        required: false
+        default: 'true'
+
+jobs:
+  run-gmail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Gmail creation script
+        env:
+          CAPSOLVER_KEY: ${{ secrets.CAPSOLVER_KEY }}
+          SMS_5SIM_TOKEN: ${{ secrets.SMS_5SIM_TOKEN }}
+          HTTP_PROXY: ${{ secrets.HTTP_PROXY }}
+        run: |
+          # headless input defaults to 'true' — script decides how to use it
+          python scripts/gh_run_gmail.py --headless "${{ github.event.inputs.headless || 'true' }}"
