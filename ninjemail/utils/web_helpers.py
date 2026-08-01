@@ -6,7 +6,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import WebDriverException, ElementClickInterceptedException
+from selenium.common.exceptions import WebDriverException, ElementClickInterceptedException, TimeoutException
 
 def safe_click(element: WebElement) -> None:
     """Click element with JavaScript as fallback"""
@@ -27,11 +27,32 @@ def wait_and_click(driver: WebDriver,
 def set_input_value(driver: WebDriver, 
                    selector: Tuple[str, str], 
                    value: str) -> None:
-    """Set input value with JavaScript to ensure proper update"""
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located(selector)
-    )
-    element.send_keys(value)
+    """Set input value with JavaScript to ensure proper update.
+
+    If the primary selector does not appear, attempt common fallbacks to locate a text input
+    and set its value. This improves robustness on pages that change structure in CI.
+    """
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(selector)
+        )
+        element.send_keys(value)
+        return
+    except TimeoutException:
+        # Fallback heuristics: find common username/password input candidates
+        candidates = driver.find_elements(By.XPATH, "//input[(@name='Username' or @name='username' or contains(translate(@placeholder, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'username') or contains(translate(@aria-label, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'username') or @type='text' or @type='email')]")
+        if candidates:
+            try:
+                candidates[0].send_keys(value)
+                return
+            except Exception:
+                try:
+                    driver.execute_script("arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'));", candidates[0], value)
+                    return
+                except Exception:
+                    pass
+        # If still not found, raise the original timeout so callers can handle it
+        raise
 
 def type_into(driver, locator, value):
     el = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(locator))
