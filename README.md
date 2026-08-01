@@ -358,3 +358,16 @@ To ensure responsible and lawful usage of Ninjemail, please consider the followi
 2. Legal Compliance: You are solely responsible for ensuring that your use of Ninjemail is in full compliance with all applicable laws and regulations within your jurisdiction. Any misuse that violates the law is strictly discouraged.
 
 By choosing to use Ninjemail, you acknowledge and accept the aforementioned disclaimers and agree to utilize this service only for educational and lawful purposes. Any misuse or illegal activities conducted using Ninjemail are entirely the responsibility of the user, and the developers and providers of Ninjemail bear no liability for such actions.
+### Running the Gmail workflow (GitHub Actions)
+
+1. Add secrets (Settings  Secrets  Actions):
+   - CAPSOLVER_KEY
+   - SMS_5SIM_TOKEN
+   - (optional) HTTP_PROXY
+   - (optional) GMAIL_TEST_PASSWORD
+
+2. Trigger the workflow: Actions  Run Ninjemail Gmail flow  Run workflow. Set the "headless" input (true/false) as needed.
+
+3. Logs: check the Actions console and logs/ninjemail.log in the repository.
+
+Security: Never commit API keys. Use repository secrets and rotate tokens after use. Ensure compliance with provider ToS and local law.
