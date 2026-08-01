@@ -263,11 +263,39 @@ def create_account(
         
         # Username and password
         set_how_to_set_username(driver)
-        set_input_value(driver, SELECTORS["username"], username)
-        next_button(driver)
-        type_into(driver, SELECTORS["password"], password)
-        type_into(driver, SELECTORS["password_confirm"], password)
-        next_button(driver)
+        # Retry loop because pages can be slow or change; capture page source on final failure for debugging
+        for attempt in range(RETRY_ATTEMPTS):
+            try:
+                set_input_value(driver, SELECTORS["username"], username)
+                next_button(driver)
+                break
+            except Exception as e:
+                logger.warning("Attempt %d to set username failed: %s", attempt + 1, str(e))
+                time.sleep(2)
+                if attempt == RETRY_ATTEMPTS - 1:
+                    try:
+                        src = driver.page_source[:2000]
+                        logger.debug("PAGE SOURCE (truncated): %s", src)
+                    except Exception:
+                        pass
+                    raise AccountCreationError("Username entry failed") from e
+
+        for attempt in range(RETRY_ATTEMPTS):
+            try:
+                type_into(driver, SELECTORS["password"], password)
+                type_into(driver, SELECTORS["password_confirm"], password)
+                next_button(driver)
+                break
+            except Exception as e:
+                logger.warning("Attempt %d to set password failed: %s", attempt + 1, str(e))
+                time.sleep(2)
+                if attempt == RETRY_ATTEMPTS - 1:
+                    try:
+                        src = driver.page_source[:2000]
+                        logger.debug("PAGE SOURCE (truncated): %s", src)
+                    except Exception:
+                        pass
+                    raise AccountCreationError("Password entry failed") from e
 
         handle_errors(driver)
         
