@@ -34,6 +34,12 @@ jobs:
           # Install the package in editable mode so scripts can import ninjemail
           # package not packaged in repo (no setup.py/pyproject.toml); will use PYTHONPATH at runtime
 
+      - name: Debug workspace
+        run: |
+          pwd
+          ls -la
+          ls -la scripts || true
+
       - name: Run Gmail creation script
         env:
           CAPSOLVER_KEY: ${{ secrets.CAPSOLVER_KEY }}
@@ -42,4 +48,4 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}
         run: |
           # headless input defaults to 'true' — script decides how to use it
-          python scripts/gh_run_gmail.py --headless "${{ github.event.inputs.headless || 'true' }}"
+          python ./scripts/gh_run_gmail.py --headless "${{ github.event.inputs.headless || 'true' }}"

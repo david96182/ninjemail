@@ -1,4 +1,4 @@
-import os
+﻿import os
 import sys
 import argparse
 import logging
@@ -46,7 +46,7 @@ def main():
 
         email, pw = ninja.create_gmail_account(
             username=username,
-            password=password,
+            use_proxy=False,
             first_name="CI",
             last_name="Runner",
             birthdate="01-01-1990",
@@ -70,3 +70,6 @@ def main():
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
     main()
+
+
+
