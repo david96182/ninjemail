@@ -48,4 +48,17 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}
         run: |
           # headless input defaults to 'true' — script decides how to use it
-          python ./scripts/gh_run_gmail.py --headless "${{ github.event.inputs.headless || 'true' }}"
+          if [ -f "./scripts/gh_run_gmail.py" ]; then
+            echo "Found ./scripts/gh_run_gmail.py — running"
+            python ./scripts/gh_run_gmail.py --headless "${{ github.event.inputs.headless || 'true' }}"
+          elif [ -f "./ninjemail/scripts/gh_run_gmail.py" ]; then
+            echo "Found ./ninjemail/scripts/gh_run_gmail.py — running"
+            python ./ninjemail/scripts/gh_run_gmail.py --headless "${{ github.event.inputs.headless || 'true' }}"
+          else
+            echo "ERROR: runner script not found in expected locations. Listing workspace:"
+            pwd
+            ls -la
+            ls -la scripts || true
+            ls -la ninjemail || true
+            exit 2
+          fi
