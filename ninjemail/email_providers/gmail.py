@@ -233,8 +233,9 @@ def confirm_alert(driver: WebDriver) -> None:
         WebDriverWait(driver, 10).until(EC.alert_is_present())
         alert = driver.switch_to.alert
         alert.accept()
-    except NoAlertPresentException:
-        logging.info("No alert present")
+    except (NoAlertPresentException, TimeoutException):
+        # No alert appeared within the wait timeout — not an error in CI runs
+        logger.info("No alert present")
 
 def create_account(
     driver,
