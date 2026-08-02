@@ -120,6 +120,7 @@ def create_account(
     month: str,
     day: str,
     year: str,
+    myyahoo: bool = False,
 ) -> Tuple[Optional[str], Optional[str]]:
     """
     Create a new Yahoo account with improved reliability
@@ -168,9 +169,10 @@ def create_account(
 
         # Log successful creation
         logger.info("Yahoo account created successfully")
-        logger.debug("Account details: %s@yahoo.com", username)
+        domain = 'myyahoo' if myyahoo else 'yahoo'
+        logger.debug("Account details: %s@%s.com", username, domain)
         
-        return f"{username}@yahoo.com", password
+        return f"{username}@{domain}.com", password
 
     except Exception as e:
         logger.error("Account creation failed: %s", str(e))
