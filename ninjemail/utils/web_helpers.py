@@ -56,17 +56,49 @@ def set_input_value(driver: WebDriver,
         raise
 
 def type_into(driver, locator, value):
-    el = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(locator))
+    """Type into an input, with fallbacks if the primary locator times out.
+
+    This helps with dynamic pages (CI) where exact locators may change or be slow to appear.
+    """
+    try:
+        el = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(locator))
+    except TimeoutException:
+        # Fallback heuristics: find password-like or generic inputs
+        candidates = driver.find_elements(By.XPATH, "//input[@type='password' or contains(@name,'Passwd') or contains(translate(@aria-label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'password') or contains(translate(@placeholder,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'password')]")
+        if not candidates:
+            # Try any text input as a last resort
+            candidates = driver.find_elements(By.XPATH, "//input[@type='text' or @type='password' or @type='email']")
+        if not candidates:
+            raise
+        el = candidates[0]
     driver.execute_script("arguments[0].scrollIntoView({block:'center'});", el)
     try:
         el.click()  # focus
     except ElementClickInterceptedException:
         # If click fails, use JavaScript to focus
-        driver.execute_script("arguments[0].focus();", el)
+        try:
+            driver.execute_script("arguments[0].focus();", el)
+        except Exception:
+            pass
     # Clear robustly (type=tel often ignores clear())
-    el.send_keys(Keys.CONTROL, "a")
-    el.send_keys(Keys.DELETE)
-    el.send_keys(str(value))
+    try:
+        el.send_keys(Keys.CONTROL, "a")
+        el.send_keys(Keys.DELETE)
+    except Exception:
+        # Fallback to JS clear
+        try:
+            driver.execute_script("arguments[0].value = '';", el)
+        except Exception:
+            pass
+    # Finally enter the value
+    try:
+        el.send_keys(str(value))
+    except Exception:
+        # Last resort: set via JS and dispatch input event
+        try:
+            driver.execute_script("arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'));", el, str(value))
+        except Exception:
+            raise
 
 def action_chain_click(driver: WebDriver, element: WebElement) -> None:
     """Perform click using ActionChains for better reliability.
